@@ -18,10 +18,10 @@ public class ServerSocketFactory {
             if (socket == null) {
                 socket = new ServerSocket(ConnectionUtil.PORT);
             }
+            return socket;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return socket;
     }
 
     public static ServerSocketChannel getSocketChannel() {
@@ -30,10 +30,10 @@ public class ServerSocketFactory {
                 serverSocketChannel = ServerSocketChannel.open();
                 serverSocketChannel.bind(address);
             }
+            return serverSocketChannel;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return serverSocketChannel;
     }
 
 }

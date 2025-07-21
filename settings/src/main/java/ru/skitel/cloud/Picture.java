@@ -5,10 +5,21 @@ import lombok.Setter;
 import java.awt.*;
 import java.nio.ByteBuffer;
 
+import static ru.skitel.cloud.Resolution.*;
+
 @Setter
 public class Picture {
 
-    private ByteBuffer[] pixels = new ByteBuffer[PictureUtil.RESOLUTION_4K];
+    private ByteBuffer[] pixels = new ByteBuffer[RESOLUTION_4k.getPixels()];
+    private static Resolution resolution;
+
+    public static void setResolution(Resolution resolution) {
+        Picture.resolution = resolution;
+    }
+
+    public static Resolution getResolution() {
+        return resolution;
+    }
 
     public static ByteBuffer getColor(int x, int y) {
         ByteBuffer allocate = ByteBuffer.allocate(3);
