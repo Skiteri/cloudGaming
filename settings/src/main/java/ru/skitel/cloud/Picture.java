@@ -36,4 +36,8 @@ public class Picture {
     public ByteBuffer[] getPixels() {
         return PictureUtil.initEmptyBufferArray();
     }
+
+    public byte[][] getPixelsByte() {
+        return PictureUtil.initEmptyByteArray();
+    }
 }
