@@ -19,7 +19,7 @@ public class PictureUtil {
                 Picture.getResolution().getWidth()][3];
         for (int i = 0, s = 0; i < 3; i++) {
             for (; s < bytes.length; s++) {
-                bytes[s][i] = 0b0100;
+                bytes[s][i] = 0b111;
             }
         }
         return bytes;

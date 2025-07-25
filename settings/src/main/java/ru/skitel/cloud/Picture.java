@@ -21,6 +21,10 @@ public class Picture {
         return resolution;
     }
 
+    public static int getPictureSize() {
+        return resolution.getPixels();
+    }
+
     public static ByteBuffer getColor(int x, int y) {
         ByteBuffer allocate = ByteBuffer.allocate(3);
         try {
