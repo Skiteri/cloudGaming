@@ -3,7 +3,6 @@ package ru.skitel.cloud;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.Arrays;
 
 public class DatagramConnection implements ClientConnectionI {
 
@@ -12,8 +11,7 @@ public class DatagramConnection implements ClientConnectionI {
     @Override
     public void write(Data data) {
         byte[] bytes = data.getBytes();
-        System.out.println(Arrays.toString(bytes));
-        DatagramPacket datagramPacket = new DatagramPacket(bytes, 3);
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
         try {
             datagramSocket.send(datagramPacket);
         } catch (IOException e) {

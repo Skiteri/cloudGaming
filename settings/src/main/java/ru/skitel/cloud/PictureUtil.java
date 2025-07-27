@@ -15,11 +15,10 @@ public class PictureUtil {
     }
 
     public static byte[][] initEmptyByteArray() {
-        byte[][] bytes = new byte[Picture.getResolution().getHeight() *
-                Picture.getResolution().getWidth()][3];
-        for (int i = 0, s = 0; i < 3; i++) {
-            for (; s < bytes.length; s++) {
-                bytes[s][i] = 0b111;
+        byte[][] bytes = new byte[Picture.getResolution().getHeight() * 3][Picture.getResolution().getHeight() * 3];
+        for (int i = 0; i < bytes.length; i++) {
+            for (int s = 0; s < bytes[0].length; s++) {
+                bytes[i][s] = 0b111;
             }
         }
         return bytes;

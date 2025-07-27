@@ -7,12 +7,11 @@ public class ClientApp {
 
         Picture.setResolution(Resolution.RESOLUTION_4k);
         ClientConnectionI channel = ClientConnectionI.connect(new DatagramConnection());
-//        ClientConnectionI channel = ClientConnectionI.connect(new SocketChannelConnection());
-
-        Picture images = new Picture();
-        byte[][] src = images.getPixelsByte();
-        for (byte[] a : src) {
-            channel.write(new Data(a));
+        for (int frame = 0; frame < 60; frame++) {
+            byte[][] picture = new Picture().getPixelsByte();
+            for (byte[] a : picture) {
+                channel.write(new Data(a));
+            }
         }
     }
 
