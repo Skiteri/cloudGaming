@@ -19,6 +19,14 @@ public class DatagramConnection implements ClientConnectionI {
         }
     }
 
+    public void write(byte[] bytes) {
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+        try {
+            datagramSocket.send(datagramPacket);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     @Override
     public void init() throws IOException {
         datagramSocket = new DatagramSocket();
