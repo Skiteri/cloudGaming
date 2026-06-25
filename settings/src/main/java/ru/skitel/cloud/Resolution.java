@@ -20,4 +20,5 @@ public enum Resolution {
         this.height = height;
         pixels = width * height;
     }
+
 }

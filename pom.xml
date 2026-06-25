@@ -17,6 +17,7 @@
 
   <modules>
     <module>client</module>
+    <module>drawer</module>
     <module>server</module>
     <module>settings</module>
     <module>test</module>

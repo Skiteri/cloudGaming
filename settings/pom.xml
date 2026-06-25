@@ -9,4 +9,13 @@
 
     <artifactId>settings</artifactId>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.skitel.cloud</groupId>
+            <artifactId>settings</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
