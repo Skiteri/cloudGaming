@@ -1,5 +1,6 @@
 package ru.skitel.cloud;
 
+import lombok.Getter;
 import lombok.Setter;
 
 import java.awt.*;
@@ -11,14 +12,11 @@ import static ru.skitel.cloud.Resolution.*;
 public class Picture {
 
     private ByteBuffer[] pixels = new ByteBuffer[RESOLUTION_4k.getPixels()];
+    @Getter
     private static Resolution resolution;
 
     public static void setResolution(Resolution resolution) {
         Picture.resolution = resolution;
-    }
-
-    public static Resolution getResolution() {
-        return resolution;
     }
 
     public static int getPictureSize() {

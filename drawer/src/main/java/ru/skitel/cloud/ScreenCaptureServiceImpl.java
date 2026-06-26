@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 public class ScreenCaptureServiceImpl extends ScreenCaptureService {
 
     private ScreenCaptureServiceImpl() {
-
     }
 
     private static ScreenCaptureServiceImpl screenCaptureService;
@@ -31,7 +30,7 @@ public class ScreenCaptureServiceImpl extends ScreenCaptureService {
             throw new RuntimeException(e);
         }
         Rectangle screenRect = new Rectangle();
-        screenRect.setSize(adapt(Resolution.RESOLUTION_4k));
+        screenRect.setSize(adapt(Picture.getResolution()));
         setScreenImage(robot.createScreenCapture(screenRect));
     }
 

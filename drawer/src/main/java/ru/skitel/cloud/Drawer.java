@@ -6,10 +6,12 @@ import java.awt.image.BufferedImage;
 
 public class Drawer  {
 
-    public static int width = 3700, height = 2180;
 
     public static void main(String[] args) {
-        long l = System.currentTimeMillis();
+
+        Picture.setResolution(Resolution.RESOLUTION_4k);
+        long l =  System.currentTimeMillis();
+
         System.out.println(System.currentTimeMillis() - l);
         draw();
         System.out.println(System.currentTimeMillis() - l);
@@ -22,7 +24,7 @@ public class Drawer  {
 
         JFrame frame = new JFrame("Рисование по точкам");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(width, height);
+        frame.setSize(Picture.getResolution().getWidth(), Picture.getResolution().getHeight());
         frame.setLocationRelativeTo(null); // Center on screen
         frame.setVisible(true);
 
