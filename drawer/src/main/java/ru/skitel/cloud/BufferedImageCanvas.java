@@ -6,15 +6,16 @@ import lombok.Setter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+import static ru.skitel.cloud.adapter.ResolutionToDimAdapter.adapt;
+
 @Getter
 @Setter
-public class MyCanvas extends Canvas {
+public class BufferedImageCanvas extends Canvas {
 
-    private final static int width = 3700, height = 2180;
     private BufferedImage img;
 
-    public MyCanvas() {
-        setSize(width, height);
+    public BufferedImageCanvas() {
+        setSize(adapt(Picture.getResolution()));
     }
 
     @Override

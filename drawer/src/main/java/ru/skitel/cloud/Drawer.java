@@ -1,36 +1,54 @@
 package ru.skitel.cloud;
 
+import ru.skitel.cloud.service.BufferedImageScreenCaptureServiceImpl;
+import ru.skitel.cloud.service.ScreenCaptureService;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Drawer  {
+public class Drawer {
 
+    public static JFrame frame = new JFrame("Рисование по точкам");
 
-    public static void main(String[] args) {
-
+    static {
         Picture.setResolution(Resolution.RESOLUTION_4k);
-        long l =  System.currentTimeMillis();
-
-        System.out.println(System.currentTimeMillis() - l);
-        draw();
-        System.out.println(System.currentTimeMillis() - l);
-    }
-
-    public static void draw() {
-        MyCanvas canvas = new MyCanvas();
-
-        BufferedImage img = ScreenCaptureServiceImpl.getInstance().get();
-
-        JFrame frame = new JFrame("Рисование по точкам");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(Picture.getResolution().getWidth(), Picture.getResolution().getHeight());
         frame.setLocationRelativeTo(null); // Center on screen
         frame.setVisible(true);
+    }
 
-        canvas.setImg(img);
+
+    public static void main(String[] args) {
+        long l =  System.currentTimeMillis();
+
+//        snapshotScreen(); // server
+//        sendScreen(); // server To Client
+//
+//        recieveScreen();
+//        drawScreen(); // client
+
+        System.out.println(System.currentTimeMillis() - l);
+        startDrawing();
+        System.out.println(System.currentTimeMillis() - l);
+    }
+
+    public static void startDrawing() {
+        BufferedImage img = snapshotScreen();
+
+        drawScreen(img);
+    }
+
+    public static void drawScreen(BufferedImage bufferImage) {
+        BufferedImageCanvas canvas = new BufferedImageCanvas();
+        canvas.setImg(bufferImage);
         frame.add(canvas);
-        frame.pack();
+    }
+
+    public static BufferedImage snapshotScreen() {
+        ScreenCaptureService screenCaptureService = new BufferedImageScreenCaptureServiceImpl();
+        return  (BufferedImage) screenCaptureService.getScreenImage();
     }
 
 }
