@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.awt.*;
 import java.nio.ByteBuffer;
 
-import static ru.skitel.cloud.Resolution.*;
+import static ru.skitel.cloud.Resolution.RESOLUTION_4k;
 
 @Setter
 public class Picture {

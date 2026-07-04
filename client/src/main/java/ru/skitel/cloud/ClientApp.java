@@ -3,8 +3,11 @@ package ru.skitel.cloud;
 
 public class ClientApp implements Runnable {
 
-    public static void main(String[] args) throws InterruptedException  {
-        Picture.setResolution(Resolution.RESOLUTION_4k);
+    private static final ClientHelper BUFFERED_IMAGE_CLIENT_HELPER = new BufferedImageClientHelper();
+
+    public static void main(String[] args) throws InterruptedException {
+        Picture.setResolution(Resolution.RESOLUTION_FULL_HD);
+//        GlobalMode.setGlobalMode(Mode.BUFFERED_IMAGE);
         start();
     }
 
@@ -18,25 +21,8 @@ public class ClientApp implements Runnable {
     }
 
     public static void start() throws InterruptedException {
-        DatagramConnection channel = (DatagramConnection) ClientConnectionI.connect(new DatagramConnection());
-        for (int frame = 0; frame < 1; frame++) {
-            byte[][] picture = new Picture().getPixelsByte();
-            for (int i = 0; i < picture.length; i++) {
-                channel.write(picture[i]);
-                System.out.println(i);
-                timeout(i);
-            }
-        }
+//      GlobalMode.getAndSendScreenshot();
+        BUFFERED_IMAGE_CLIENT_HELPER.getAndSendScreenshot();
     }
 
-    private static void timeout(int frame) {
-        if (frame % 140 != 0) {
-            return;
-        }
-        try {
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

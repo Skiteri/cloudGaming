@@ -23,4 +23,5 @@ public class BufferedImageScreenCaptureServiceImpl implements ScreenCaptureServi
         return robot.createScreenCapture(screenRect);
     }
 
+
 }
