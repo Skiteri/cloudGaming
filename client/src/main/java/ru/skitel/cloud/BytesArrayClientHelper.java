@@ -20,13 +20,6 @@ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
         getChannel().write(snapshot);
     }
 
-    //todo
-    public static void drawScreen(byte[] bufferImage) {
-//        BufferedImageCanvas canvas = new BufferedImageCanvas();
-//        canvas.setImg(bufferImage);
-//        frame.setVisible(true);
-//        frame.add(canvas);
-    }
 
 
 

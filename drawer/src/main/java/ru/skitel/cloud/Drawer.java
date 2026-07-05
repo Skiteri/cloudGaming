@@ -1,14 +1,13 @@
 package ru.skitel.cloud;
 
-import ru.skitel.cloud.service.BufferedImageScreenCaptureServiceImpl;
-import ru.skitel.cloud.service.ByteArrayScreenCaptureServiceImpl;
-import ru.skitel.cloud.service.ScreenCaptureService;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 public class Drawer {
 
+    @Setter
     public static JFrame frame = new JFrame("Рисование по точкам");
 
     static {
@@ -17,5 +16,11 @@ public class Drawer {
         frame.setLocationRelativeTo(null); // Center on screen
     }
 
+    public static void drawScreen(BufferedImage bufferedImage) {
+        BufferedImageCanvas canvas = new BufferedImageCanvas();
+        canvas.setImg(bufferedImage);
+        frame.setVisible(true);
+        frame.add(canvas);
+    }
 
 }

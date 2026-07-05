@@ -7,9 +7,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import static ru.skitel.cloud.Drawer.frame;
-
-
 public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
 
     private final BufferedImageScreenCaptureServiceImpl bufferedImageScreenCaptureService = new BufferedImageScreenCaptureServiceImpl();
@@ -28,12 +25,6 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
         getChannel().write(picture);
     }
 
-    public void drawScreen(BufferedImage bufferImage) {
-        BufferedImageCanvas canvas = new BufferedImageCanvas();
-        canvas.setImg(bufferImage);
-        frame.setVisible(true);
-        frame.add(canvas);
-    }
 
     private static byte[] snapshotToByteArray(BufferedImage screenshot) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

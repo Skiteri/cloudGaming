@@ -7,5 +7,4 @@ public class ByteArrayScreenCaptureServiceImpl implements ScreenCaptureService {
         return null;
     }
 
-
 }
