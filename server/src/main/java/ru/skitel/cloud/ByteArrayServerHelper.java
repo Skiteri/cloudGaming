@@ -2,7 +2,7 @@ package ru.skitel.cloud;
 
 import java.io.IOException;
 
-import static ru.skitel.cloud.ImageConverter.byteArrayToBufferedImage;
+import static ru.skitel.cloud.converter.ImageConverter.byteArrayToBufferedImage;
 
 public class ByteArrayServerHelper extends ServerHelper<byte[]> {
 

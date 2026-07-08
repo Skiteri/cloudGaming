@@ -1,0 +1,12 @@
+package ru.skitel.cloud;
+
+public class ClientAppTest {
+
+    public static void main(String[] args) {
+
+        ClientHelper clientHelper = new ClientHelperTest();
+        clientHelper.getAndSendScreenshot();
+
+    }
+
+}

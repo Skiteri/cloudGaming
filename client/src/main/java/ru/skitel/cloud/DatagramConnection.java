@@ -27,6 +27,7 @@ public class DatagramConnection implements ClientConnectionI {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public void init() throws IOException {
         datagramSocket = new DatagramSocket();

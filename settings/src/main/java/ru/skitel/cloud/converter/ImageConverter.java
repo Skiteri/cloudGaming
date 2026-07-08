@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.converter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

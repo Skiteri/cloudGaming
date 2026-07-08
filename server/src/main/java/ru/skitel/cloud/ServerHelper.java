@@ -4,7 +4,7 @@ import java.net.DatagramPacket;
 
 public abstract class ServerHelper<T> {
 
-    public static DatagramPacket pack = new DatagramPacket(new byte[Picture.getResolution().getWidth() * 3], Picture.getResolution().getWidth() * 3);
+    public static DatagramPacket pack = new DatagramPacket(new byte[Setting.getResolution().getWidth() * 3], Setting.getResolution().getWidth() * 3);
 
     public abstract void receiveAndDraw();
     public abstract void drawScreen(T bufferImage);

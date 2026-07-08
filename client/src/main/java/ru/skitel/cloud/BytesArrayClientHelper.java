@@ -21,8 +21,6 @@ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
     }
 
 
-
-
 //    private static void sendSnapshot(Object snapshot) {
 //        for (int frame = 0; frame < 1; frame++) {
 //            byte[][] picture = new Picture().getPixelsByte();

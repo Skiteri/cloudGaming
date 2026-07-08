@@ -15,7 +15,7 @@ public class BufferedImageCanvas extends Canvas {
     private BufferedImage img;
 
     public BufferedImageCanvas() {
-        setSize(adapt(Picture.getResolution()));
+        setSize(adapt(Setting.getResolution()));
     }
 
     @Override

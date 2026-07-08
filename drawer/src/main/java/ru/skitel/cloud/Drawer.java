@@ -12,7 +12,7 @@ public class Drawer {
 
     static {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(Picture.getResolution().getWidth(), Picture.getResolution().getHeight());
+        frame.setSize(Setting.getResolution().getWidth(), Setting.getResolution().getHeight());
         frame.setLocationRelativeTo(null); // Center on screen
     }
 

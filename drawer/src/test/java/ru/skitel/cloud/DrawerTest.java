@@ -9,7 +9,6 @@ import java.awt.image.BufferedImage;
 public class DrawerTest {
 
     public static void main(String... args) {
-        Picture.setResolution(Resolution.RESOLUTION_4k);
 
         int width = 3, height = 3;
         JFrame frame = new JFrame();

@@ -6,8 +6,6 @@ public class ClientApp implements Runnable {
     private static final ClientHelper BUFFERED_IMAGE_CLIENT_HELPER = new BufferedImageClientHelper();
 
     public static void main(String[] args) throws InterruptedException {
-        Picture.setResolution(Resolution.RESOLUTION_FULL_HD);
-//        GlobalMode.setGlobalMode(Mode.BUFFERED_IMAGE);
         start();
     }
 

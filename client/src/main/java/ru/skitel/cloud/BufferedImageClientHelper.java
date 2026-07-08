@@ -26,7 +26,7 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
     }
 
 
-    private static byte[] snapshotToByteArray(BufferedImage screenshot) {
+    public static byte[] snapshotToByteArray(BufferedImage screenshot) { //todo вытащить за конвертер
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
             ImageIO.write(screenshot, "jpg", baos);
