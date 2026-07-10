@@ -1,8 +1,10 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.facade;
 
 import lombok.Getter;
+import ru.skitel.cloud.connection.ClientConnectionI;
+import ru.skitel.cloud.connection.DatagramConnection;
 
-public abstract class ClientHelper<T> {
+public abstract class ClientHelper<T>  {
 
     @Getter
     private static final DatagramConnection channel = (DatagramConnection) ClientConnectionI.connect(new DatagramConnection());

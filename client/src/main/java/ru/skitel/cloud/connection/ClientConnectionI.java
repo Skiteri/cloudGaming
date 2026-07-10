@@ -1,15 +1,15 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.connection;
+
+import ru.skitel.cloud.ConnectionUtil;
+import ru.skitel.cloud.Data;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-
-import static ru.skitel.cloud.Resolution.FPS;
 
 public interface ClientConnectionI {
 
     InetSocketAddress inetSocketAddress = new InetSocketAddress(ConnectionUtil.HOST, ConnectionUtil.PORT);
     InetSocketAddress localSocketAddress = new InetSocketAddress(ConnectionUtil.LOCALHOST, ConnectionUtil.PORT);
-    long TIMEOUT = 1000 / FPS;
 
     void write(Data data);
     void init() throws IOException;

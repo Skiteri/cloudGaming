@@ -1,11 +1,10 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.service.BufferedImageScreenCaptureServiceImpl;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+
+import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
 
@@ -21,19 +20,8 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
 
     @Override
     public void sendSnapshot(BufferedImage snapshot) {
-        byte[] picture = snapshotToByteArray(snapshot);
+        byte[] picture = convert(snapshot);
         getChannel().write(picture);
-    }
-
-
-    public static byte[] snapshotToByteArray(BufferedImage screenshot) { //todo вытащить за конвертер
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
-            ImageIO.write(screenshot, "jpg", baos);
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

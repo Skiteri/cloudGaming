@@ -1,6 +1,4 @@
-package ru.skitel.cloud;
-
-import lombok.Getter;
+package ru.skitel.cloud.setting;
 
 public enum ServerSettingEnum {
 

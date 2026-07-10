@@ -1,9 +1,6 @@
 package ru.skitel.cloud;
 
-
 public class ClientApp implements Runnable {
-
-    private static final ClientHelper BUFFERED_IMAGE_CLIENT_HELPER = new BufferedImageClientHelper();
 
     public static void main(String[] args) throws InterruptedException {
         start();
@@ -19,8 +16,7 @@ public class ClientApp implements Runnable {
     }
 
     public static void start() throws InterruptedException {
-//      GlobalMode.getAndSendScreenshot();
-        BUFFERED_IMAGE_CLIENT_HELPER.getAndSendScreenshot();
+        ClientModeResolver.getClientHelper().getAndSendScreenshot();
     }
 
 }

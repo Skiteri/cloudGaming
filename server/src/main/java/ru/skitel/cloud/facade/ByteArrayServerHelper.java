@@ -1,8 +1,11 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.facade;
+
+import ru.skitel.cloud.DatagramServerFactory;
+import ru.skitel.cloud.Drawer;
 
 import java.io.IOException;
 
-import static ru.skitel.cloud.converter.ImageConverter.byteArrayToBufferedImage;
+import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class ByteArrayServerHelper extends ServerHelper<byte[]> {
 
@@ -14,7 +17,7 @@ public class ByteArrayServerHelper extends ServerHelper<byte[]> {
 
     @Override
     public void drawScreen(byte[] byteImage) {
-        Drawer.drawScreen(byteArrayToBufferedImage(byteImage));
+        Drawer.drawScreen(convert(byteImage));
     }
 
     @Override

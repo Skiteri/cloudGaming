@@ -1,4 +1,6 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.connection;
+
+import ru.skitel.cloud.Data;
 
 import java.io.IOException;
 import java.net.DatagramPacket;

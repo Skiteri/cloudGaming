@@ -1,10 +1,12 @@
 package ru.skitel.cloud;
 
-import javax.swing.*;
+import ru.skitel.cloud.facade.ClientHelper;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static ru.skitel.cloud.BufferedImageClientHelper.snapshotToByteArray;
+import static java.awt.Color.red;
+import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class ClientHelperTest extends ClientHelper<BufferedImage> {
 
@@ -16,10 +18,9 @@ public class ClientHelperTest extends ClientHelper<BufferedImage> {
 
     @Override
     public void sendSnapshot(BufferedImage snapshot) {
-        byte[] picture = snapshotToByteArray(snapshot);
+        byte[] picture = convert(snapshot);
         getChannel().write(picture);
     }
-
 
     private BufferedImage create3by3() {
         int width = 3, height = 3;
@@ -29,7 +30,7 @@ public class ClientHelperTest extends ClientHelper<BufferedImage> {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                Color color = new Color((int) (Math.random() * 0x1000000));
+                Color color = red;
                 graphics.fillRect(i  * 200, j  * 200, 200, 200);
                 graphics.setColor(color);
             }

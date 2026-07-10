@@ -1,14 +1,14 @@
 package ru.skitel.cloud;
 
+import ru.skitel.cloud.facade.ServerHelper;
+
 /**
  * Hello world! todo: 3 на 3 и Settings и mode buffer(можно обьединить)
  */
 public class ServerApp implements Runnable {
 
-
     public static void main(String[] args) {
-        new BufferedImageServerHelper().receiveAndDraw();
-//        ServerSettingEnum.getServerHelper().receiveAndDraw();
+        ServerModeResolver.getServerHelper().receiveAndDraw();
     }
 
     @Override

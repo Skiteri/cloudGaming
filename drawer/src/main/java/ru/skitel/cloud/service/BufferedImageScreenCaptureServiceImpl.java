@@ -1,7 +1,7 @@
 package ru.skitel.cloud.service;
 
 
-import ru.skitel.cloud.Setting;
+import ru.skitel.cloud.GlobalSettings;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ public class BufferedImageScreenCaptureServiceImpl implements ScreenCaptureServi
             throw new RuntimeException(e);
         }
         Rectangle screenRect = new Rectangle();
-        screenRect.setSize(adapt(Setting.getResolution()));
+        screenRect.setSize(adapt(GlobalSettings.getResolution()));
         return robot.createScreenCapture(screenRect);
     }
 

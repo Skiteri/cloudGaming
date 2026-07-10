@@ -1,10 +1,13 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.facade;
+
+import ru.skitel.cloud.BufferedImageCanvas;
+import ru.skitel.cloud.DatagramServerFactory;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import static ru.skitel.cloud.Drawer.frame;
-import static ru.skitel.cloud.converter.ImageConverter.byteArrayToBufferedImage;
+import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
 
@@ -23,7 +26,7 @@ public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
     public BufferedImage receiveScreen() {
         try {
             DatagramServerFactory.getDatagramSocket().receive(pack);
-            return byteArrayToBufferedImage(pack.getData());
+            return convert(pack.getData());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

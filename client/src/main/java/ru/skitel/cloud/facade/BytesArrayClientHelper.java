@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.service.ByteArrayScreenCaptureServiceImpl;
 
