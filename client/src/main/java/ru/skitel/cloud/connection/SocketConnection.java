@@ -24,6 +24,6 @@ public class SocketConnection implements ClientConnectionI {
 
     @Override
     public void init() throws IOException {
-        socket = new Socket(localSocketAddress.getHostName(), localSocketAddress.getPort());
+        socket = new Socket(socketAddress.getHostName(), socketAddress.getPort());
     }
 }

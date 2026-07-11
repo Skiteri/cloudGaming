@@ -1,6 +1,6 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.ConnectionUtil;
+import ru.skitel.cloud.ClientConnectionSingleton;
 import ru.skitel.cloud.Data;
 
 import java.io.IOException;
@@ -8,11 +8,11 @@ import java.net.InetSocketAddress;
 
 public interface ClientConnectionI {
 
-    InetSocketAddress inetSocketAddress = new InetSocketAddress(ConnectionUtil.HOST, ConnectionUtil.PORT);
-    InetSocketAddress localSocketAddress = new InetSocketAddress(ConnectionUtil.LOCALHOST, ConnectionUtil.PORT);
+    InetSocketAddress socketAddress = ClientConnectionSingleton.getInstance();
 
     void write(Data data);
     void init() throws IOException;
+
 
     static ClientConnectionI connect(ClientConnectionI connectionI) {
         try {

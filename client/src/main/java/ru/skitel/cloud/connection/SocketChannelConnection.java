@@ -12,7 +12,7 @@ public class SocketChannelConnection implements ClientConnectionI {
     public void init() throws RuntimeException {
         try {
             socket = SocketChannel.open();
-            socket.connect(localSocketAddress);
+            socket.connect(socketAddress);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

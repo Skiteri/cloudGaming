@@ -30,5 +30,4 @@ public enum ClientModeResolver {
         clientHelper = type;
     }
 
-
 }

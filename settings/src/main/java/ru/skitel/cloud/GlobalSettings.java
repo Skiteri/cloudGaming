@@ -8,6 +8,7 @@ public final class GlobalSettings {
     private static final Resolution RESOLUTION = Resolution.RESOLUTION_4k;
     private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
     private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
+    private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 
 
@@ -21,5 +22,9 @@ public final class GlobalSettings {
 
     public static Mode getServerMode() {
         return SERVER_MODE;
+    }
+
+    public static ConnectionType getConnectionType() {
+        return CONNECTION_TYPE;
     }
 }

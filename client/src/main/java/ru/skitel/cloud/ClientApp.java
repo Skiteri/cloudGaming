@@ -6,6 +6,10 @@ public class ClientApp implements Runnable {
         start();
     }
 
+    public static void start() throws InterruptedException {
+        ClientModeResolver.getClientHelper().getAndSendScreenshot();
+    }
+
     @Override
     public void run() {
         try {
@@ -15,8 +19,5 @@ public class ClientApp implements Runnable {
         }
     }
 
-    public static void start() throws InterruptedException {
-        ClientModeResolver.getClientHelper().getAndSendScreenshot();
-    }
 
 }

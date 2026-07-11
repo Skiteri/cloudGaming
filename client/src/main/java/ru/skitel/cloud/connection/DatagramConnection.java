@@ -33,6 +33,6 @@ public class DatagramConnection implements ClientConnectionI {
     @Override
     public void init() throws IOException {
         datagramSocket = new DatagramSocket();
-        datagramSocket.connect(localSocketAddress);
+        datagramSocket.connect(socketAddress);
     }
 }
