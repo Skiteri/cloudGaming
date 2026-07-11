@@ -17,7 +17,7 @@ public enum ClientModeResolver {
 
     ClientModeResolver(Mode mode, Class<? extends ClientHelper<?>> clazz) {
         try {
-            if (GlobalSettings.CLIENT_MODE.getSetting() == mode) {
+            if (GlobalSettings.getClientMode() == mode) {
                 setClientHelper(clazz.getDeclaredConstructor().newInstance());
             }
         } catch (RuntimeException | NoSuchMethodException | InstantiationException | IllegalAccessException |

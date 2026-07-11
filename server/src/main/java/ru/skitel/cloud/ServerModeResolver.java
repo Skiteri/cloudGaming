@@ -17,7 +17,7 @@ public enum ServerModeResolver {
 
     ServerModeResolver(Mode mode, Class<? extends ServerHelper<?>> clazz) {
         try {
-            if (GlobalSettings.SERVER_MODE.getSetting() == mode) {
+            if (GlobalSettings.getServerMode() == mode) {
                 setServerHelper(clazz.getDeclaredConstructor().newInstance());
             }
         } catch (RuntimeException | NoSuchMethodException | InstantiationException | IllegalAccessException |
