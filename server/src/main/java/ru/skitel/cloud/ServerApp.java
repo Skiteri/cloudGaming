@@ -3,7 +3,7 @@ package ru.skitel.cloud;
 import ru.skitel.cloud.facade.ServerHelper;
 
 /**
- * Hello world! todo: 3 на 3 и Settings и mode buffer(можно обьединить)
+ * Hello world! todo: 3 на 3
  */
 public class ServerApp implements Runnable {
 

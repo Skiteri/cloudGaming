@@ -11,18 +11,19 @@
     </parent>
 
     <artifactId>test</artifactId>
-    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>ru.skitel.cloud</groupId>
             <artifactId>server</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ru.skitel.cloud</groupId>
             <artifactId>client</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

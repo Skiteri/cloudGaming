@@ -1,14 +1,20 @@
 package ru.skitel.cloud;
 
+import lombok.Setter;
+
 public final class GlobalSettings {
 
     private GlobalSettings() {
     }
 
-    private static final Resolution RESOLUTION = Resolution.RESOLUTION_4k;
-    private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
-    private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
-    private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
+    @Setter
+    private static Resolution RESOLUTION = Resolution.RESOLUTION_4k;
+    @Setter
+    private static Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
+    @Setter
+    private static Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
+    @Setter
+    private static ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 
 

@@ -4,14 +4,13 @@ import ru.skitel.cloud.facade.ClientHelper;
 
 import java.awt.image.BufferedImage;
 
-import static ru.skitel.cloud.ImageUtil.create3by3;
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class ClientHelperTest extends ClientHelper<BufferedImage> {
+public class IntegrationHelper extends ClientHelper<BufferedImage> {
 
     @Override
     public void getAndSendScreenshot() {
-        BufferedImage bufferedImage = create3by3();
+        BufferedImage bufferedImage = ImageUtil.create3by3();
         sendSnapshot(bufferedImage);
     }
 

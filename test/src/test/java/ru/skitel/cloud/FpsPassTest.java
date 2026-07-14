@@ -1,11 +1,12 @@
 package ru.skitel.cloud;
 
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.skitel.cloud.connection.ClientConnectionI;
+import ru.skitel.cloud.connection.DatagramConnection;
 
 @ExtendWith(MockitoExtension.class)
 public class FpsPassTest {
