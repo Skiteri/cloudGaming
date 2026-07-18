@@ -24,4 +24,9 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
         getChannel().write(picture);
     }
 
+//    public void sendSnapshot(MyImage snapshot) {
+//        byte[] picture = convert(snapshot);
+//        getChannel().write(picture);
+//    }
+
 }

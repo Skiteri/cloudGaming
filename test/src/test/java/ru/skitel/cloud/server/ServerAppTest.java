@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.server;
 
 
 import ru.skitel.cloud.facade.BufferedImageServerHelper;

@@ -1,10 +1,8 @@
 package ru.skitel.cloud;
 
-import ru.skitel.cloud.facade.ServerHelper;
+import ru.skitel.cloud.api.ServerHelper;
+import ru.skitel.cloud.setting.ServerModeResolver;
 
-/**
- * Hello world! todo: 3 на 3
- */
 public class ServerApp implements Runnable {
 
     public static void main(String[] args) {

@@ -11,12 +11,12 @@ public enum Resolution implements SettingSingleton {
 
     private final int height;
     private final int width;
-    private final int pixels;
+    private final int pixelsCount;
 
     Resolution(int width, int height) {
         this.width = width;
         this.height = height;
-        pixels = width * height;
+        pixelsCount = width * height;
     }
 
 }

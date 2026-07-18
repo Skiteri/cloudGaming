@@ -1,12 +1,13 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.client;
 
 import ru.skitel.cloud.facade.ClientHelper;
+import ru.skitel.cloud.utils.ImageUtil;
 
 import java.awt.image.BufferedImage;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class IntegrationHelper extends ClientHelper<BufferedImage> {
+public class ClientHelperTest extends ClientHelper<BufferedImage> {
 
     @Override
     public void getAndSendScreenshot() {

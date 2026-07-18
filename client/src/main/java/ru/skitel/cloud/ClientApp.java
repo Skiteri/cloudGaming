@@ -3,25 +3,16 @@ package ru.skitel.cloud;
 public class ClientApp implements Runnable {
 
     public static void main(String[] args) {
-        try {
-            start();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        start();
     }
 
-    public static void start() throws InterruptedException {
+    public static void start()  {
         ClientModeResolver.getClientHelper().getAndSendScreenshot();
     }
 
     @Override
     public void run() {
-        try {
-            start();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        start();
     }
-
 
 }

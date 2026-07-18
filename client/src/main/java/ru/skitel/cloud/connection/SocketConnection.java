@@ -1,20 +1,18 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.Data;
+import ru.skitel.cloud.ClientConnectionSingleton;
+import ru.skitel.cloud.ClientConnector;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
 
-public class SocketConnection implements ClientConnectionI {
+public class SocketConnection extends ClientConnector implements ClientConnectionI<byte[]> {
 
     private Socket socket;
 
     @Override
-    public void write(Data data) {
+    public void write(byte[] bytes) {
         try {
-            byte[] bytes = data.getBytes();
-            System.out.println(Arrays.toString(bytes));
             socket.getOutputStream().write(bytes);
             socket.getOutputStream().flush();
         } catch (IOException e) {
@@ -23,7 +21,11 @@ public class SocketConnection implements ClientConnectionI {
     }
 
     @Override
-    public void init() throws IOException {
-        socket = new Socket(socketAddress.getHostName(), socketAddress.getPort());
+    public void openConnection() {
+        try {
+            socket = new Socket(ClientConnectionSingleton.getInstance().getHostName(), ClientConnectionSingleton.getInstance().getPort());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

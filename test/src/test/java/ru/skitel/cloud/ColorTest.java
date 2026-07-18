@@ -1,4 +1,4 @@
-import ru.skitel.cloud.Picture;
+package ru.skitel.cloud;
 
 import java.awt.*;
 import java.nio.ByteBuffer;

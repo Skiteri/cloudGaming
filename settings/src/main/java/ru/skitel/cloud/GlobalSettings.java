@@ -17,20 +17,17 @@ public final class GlobalSettings {
     private static ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 
-
     public static Resolution getResolution() {
         return RESOLUTION;
     }
-
     public static Mode getClientMode() {
         return CLIENT_MODE;
     }
-
     public static Mode getServerMode() {
         return SERVER_MODE;
     }
-
     public static ConnectionType getConnectionType() {
         return CONNECTION_TYPE;
     }
+
 }

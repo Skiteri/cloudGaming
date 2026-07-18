@@ -7,7 +7,7 @@ import ru.skitel.cloud.connection.DatagramConnection;
 public abstract class ClientHelper<T>  {
 
     @Getter
-    private static final DatagramConnection channel = (DatagramConnection) ClientConnectionI.connect(new DatagramConnection());
+    private static final ClientConnectionI channel = new DatagramConnection();
 
     public abstract void getAndSendScreenshot();
 

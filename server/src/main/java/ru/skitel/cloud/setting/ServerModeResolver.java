@@ -1,9 +1,11 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.setting;
 
 import lombok.Getter;
+import ru.skitel.cloud.GlobalSettings;
+import ru.skitel.cloud.Mode;
 import ru.skitel.cloud.facade.BufferedImageServerHelper;
 import ru.skitel.cloud.facade.ByteArrayServerHelper;
-import ru.skitel.cloud.facade.ServerHelper;
+import ru.skitel.cloud.api.ServerHelper;
 
 import java.lang.reflect.InvocationTargetException;
 

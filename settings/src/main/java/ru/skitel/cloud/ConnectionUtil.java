@@ -5,5 +5,6 @@ public class ConnectionUtil {
     public final static String HOST = "192.168.0.22";
     public final static String LOCALHOST = "localhost";
     public final static int PORT = 5643;
+    public final static int LOCALPORT = 8080;
 
 }

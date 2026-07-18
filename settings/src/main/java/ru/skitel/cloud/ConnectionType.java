@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ConnectionType {
 
-    LOCAL(ConnectionUtil.LOCALHOST, ConnectionUtil.PORT),
+    LOCAL(ConnectionUtil.LOCALHOST, ConnectionUtil.LOCALPORT),
     WI_FI(ConnectionUtil.HOST, ConnectionUtil.PORT);
 
     private final String hostname;

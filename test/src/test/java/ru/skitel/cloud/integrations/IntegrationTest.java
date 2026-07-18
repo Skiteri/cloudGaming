@@ -1,15 +1,17 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.integrations;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.skitel.cloud.GlobalSettings;
+import ru.skitel.cloud.Mode;
+import ru.skitel.cloud.setting.ServerModeResolver;
 import ru.skitel.cloud.converter.ImageConverter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.concurrent.*;
 
-import static ru.skitel.cloud.ImageUtil.create3by3;
+import static ru.skitel.cloud.utils.ImageUtil.create3by3;
 
 public class IntegrationTest {
 

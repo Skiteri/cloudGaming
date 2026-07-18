@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.client;
 
 import ru.skitel.cloud.facade.ClientHelper;
 

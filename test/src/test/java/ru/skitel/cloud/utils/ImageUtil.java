@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.utils;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

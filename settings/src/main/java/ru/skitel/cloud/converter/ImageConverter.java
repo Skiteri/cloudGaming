@@ -29,4 +29,15 @@ public final class ImageConverter {
         }
     }
 
+//    public static byte[] convert(BufferedImage screenshot) {
+//        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+//            ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+//            oos.writeObject(screenshot);
+//            return bos.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
+
 }

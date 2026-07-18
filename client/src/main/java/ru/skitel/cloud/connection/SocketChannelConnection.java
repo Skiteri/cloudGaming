@@ -1,27 +1,30 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.Data;
+import ru.skitel.cloud.ClientConnectionSingleton;
+import ru.skitel.cloud.ClientConnector;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class SocketChannelConnection implements ClientConnectionI {
+public class SocketChannelConnection extends ClientConnector implements ClientConnectionI<ByteBuffer> {
 
     private SocketChannel socket;
 
-    public void init() throws RuntimeException {
+    @Override
+    public void openConnection() throws RuntimeException {
         try {
             socket = SocketChannel.open();
-            socket.connect(socketAddress);
+            socket.connect(ClientConnectionSingleton.getInstance());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void write(Data data) {
+    public void write(ByteBuffer data) {
         try {
-            socket.write(data.getByteBuffer());
+            socket.write(data);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,9 +1,7 @@
 package ru.skitel.cloud.facade;
 
-import ru.skitel.cloud.DatagramServerFactory;
 import ru.skitel.cloud.Drawer;
-
-import java.io.IOException;
+import ru.skitel.cloud.api.ServerHelper;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
@@ -22,12 +20,12 @@ public class ByteArrayServerHelper extends ServerHelper<byte[]> {
 
     @Override
     public byte[] receiveScreen() {
-        try {
-            DatagramServerFactory.getDatagramSocket().receive(pack);
-            return pack.getData();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            return getServerConnection().getPack();
+            return null;
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
 }
