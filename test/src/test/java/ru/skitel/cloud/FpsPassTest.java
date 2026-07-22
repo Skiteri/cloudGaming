@@ -1,12 +1,13 @@
 package ru.skitel.cloud;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.skitel.cloud.connection.ClientConnectionI;
-import ru.skitel.cloud.connection.DatagramConnection;
+
+import java.net.DatagramPacket;
 
 @ExtendWith(MockitoExtension.class)
 public class FpsPassTest {
@@ -24,6 +25,39 @@ public class FpsPassTest {
         Thread thread = new Thread(new ServerApp());
         thread.start();
 //        benc();
+    }
+
+
+    @Test
+    public void passsTime() throws InterruptedException {
+//        int length = GlobalSettings.getResolution().getPixelsCount() * 3;
+//        int maxPacketLength = 65507;
+//        int countSending = (int) Math.ceil((double) length / 65507);
+//        int lastPacketCount = maxPacketLength * countSending - length;
+//        for (int i = 0; i < countSending; i++) {
+//            DatagramPacket datagramPacket = new DatagramPacket(bytes, i, maxPacketLength);
+//            datagramSocket.send(datagramPacket);
+//        }
+//
+//        DatagramPacket datagramPacket = new DatagramPacket(bytes, countSending, lastPacketCount);
+//        datagramSocket.send(datagramPacket);
+
+        int length = 21;
+        int maxPacketLength = 4;
+        int countSending = (int) Math.ceil((double) length / maxPacketLength);
+        System.out.println(countSending);
+
+
+        for (int i = 0; i < countSending - 1; i++) {
+            System.out.println(i  + ": " + (i + 1) * maxPacketLength);
+        }
+//        }
+
+        int lastPacketCount = length - maxPacketLength * (countSending - 1);
+
+        System.out.println(countSending + ": " + (maxPacketLength * (countSending - 1) + lastPacketCount));
+
+
     }
 
 //    private static void benc() throws InterruptedException {

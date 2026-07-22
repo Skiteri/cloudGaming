@@ -4,11 +4,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.Mode;
+import ru.skitel.cloud.Resolution;
 import ru.skitel.cloud.setting.ServerModeResolver;
 import ru.skitel.cloud.converter.ImageConverter;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.concurrent.*;
 
 import static ru.skitel.cloud.utils.ImageUtil.create3by3;
@@ -16,8 +18,9 @@ import static ru.skitel.cloud.utils.ImageUtil.create3by3;
 public class IntegrationTest {
 
     @Test
-    public void checkIntegration() throws ExecutionException, InterruptedException {
+    public void checkIntegration() throws ExecutionException, InterruptedException, IOException {
         GlobalSettings.setSERVER_MODE(Mode.BYTE_ARRAY_MODE);
+        GlobalSettings.setRESOLUTION(Resolution.RESOLUTION_ANY);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Callable<byte[]> task = () -> (byte[]) ServerModeResolver.getServerHelper().receiveScreen();

@@ -2,6 +2,8 @@ package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.service.ByteArrayScreenCaptureServiceImpl;
 
+import java.io.IOException;
+
 
 public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
@@ -17,7 +19,11 @@ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
     @Override
     public void sendSnapshot(byte[] snapshot) {
-        getChannel().write(snapshot);
+        try {
+            getChannel().write(snapshot);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

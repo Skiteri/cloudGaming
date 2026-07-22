@@ -15,6 +15,9 @@ public final class GlobalSettings {
     private static Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
     @Setter
     private static ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
+    @Setter
+    private static PacketSettings PACKET_SETTINGS = new PacketSettings(65507, 8400);
+
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 
     public static Resolution getResolution() {
@@ -29,5 +32,6 @@ public final class GlobalSettings {
     public static ConnectionType getConnectionType() {
         return CONNECTION_TYPE;
     }
-
+    public static PacketSettings getPacketSettings() {return PACKET_SETTINGS;
+    }
 }

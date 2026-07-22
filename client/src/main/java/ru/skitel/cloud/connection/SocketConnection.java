@@ -1,12 +1,11 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.ClientConnectionSingleton;
-import ru.skitel.cloud.ClientConnector;
+import ru.skitel.cloud.InetSockedAddressFactory;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public class SocketConnection extends ClientConnector implements ClientConnectionI<byte[]> {
+public class SocketConnection extends ClientConnector implements PackageWriter<byte[]> {
 
     private Socket socket;
 
@@ -23,7 +22,7 @@ public class SocketConnection extends ClientConnector implements ClientConnectio
     @Override
     public void openConnection() {
         try {
-            socket = new Socket(ClientConnectionSingleton.getInstance().getHostName(), ClientConnectionSingleton.getInstance().getPort());
+            socket = new Socket(InetSockedAddressFactory.getInstance().getHostName(), InetSockedAddressFactory.getInstance().getPort());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -8,7 +8,16 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class DatagramImageCollectorServiceImpl implements ImageCollectorService {
 
-    private final DatagramServerReceiver serverConnection = DatagramServerReceiver.DatagramSocketFactory.getInstance();
+    private final DatagramServerReceiver serverConnection;
+
+    public DatagramImageCollectorServiceImpl(DatagramServerReceiver datagramServerReceiver) {
+        this.serverConnection = datagramServerReceiver;
+    }
+
+    public DatagramImageCollectorServiceImpl() {
+        serverConnection = DatagramServerReceiver.DatagramSocketFactory.getInstance();
+    }
+
 
     public BufferedImage collect(int countSending, byte[] result) {
         for (int i = 0; i <= countSending - 1; i++) {

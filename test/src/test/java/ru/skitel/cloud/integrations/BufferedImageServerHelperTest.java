@@ -1,21 +1,26 @@
-package ru.skitel.cloud.facade;
+package ru.skitel.cloud.integrations;
 
 import ru.skitel.cloud.BufferedImageCanvas;
 import ru.skitel.cloud.GlobalSettings;
+import ru.skitel.cloud.api.ImageCollectorService;
 import ru.skitel.cloud.api.ServerHelper;
 import ru.skitel.cloud.service.datagram.DatagramImageCollectorServiceImpl;
-import ru.skitel.cloud.api.ImageCollectorService;
 
 import java.awt.image.BufferedImage;
 
 import static ru.skitel.cloud.Drawer.frame;
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
+public class BufferedImageServerHelperTest extends ServerHelper<byte[]> {
 
     public void receiveAndDraw() {
-        BufferedImage bufferedImage = receiveScreen();
+        BufferedImage bufferedImage = convert(receiveScreen());
         drawScreen(bufferedImage);
+    }
+
+    @Override
+    public void drawScreen(byte[] bufferImage) {
+
     }
 
     public void drawScreen(BufferedImage bufferImage) {
@@ -25,16 +30,12 @@ public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
         frame.add(canvas);
     }
 
-    public BufferedImage receiveScreen() {
-        int length = GlobalSettings.getPacketSettings().getDataLength();
-        int iterations = GlobalSettings.getPacketSettings().getIterations();
-
-        byte[] result = new byte[length];
+    @Override
+    public byte[] receiveScreen() {
+        byte[] result = new byte[GlobalSettings.getPacketSettings().getDataLength()];
 
         ImageCollectorService collectorService = new DatagramImageCollectorServiceImpl();
-        collectorService.collect(iterations, result);
-        return convert(result);
+        collectorService.collect(GlobalSettings.getPacketSettings().getIterations(), result);
+        return result;
     }
-
-
 }

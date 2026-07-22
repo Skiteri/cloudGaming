@@ -19,6 +19,16 @@ public final class ImageConverter {
         }
     }
 
+//    public static byte[] convert(BufferedImage screenshot) {
+//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//        try {
+//            ImageIO.write(screenshot, "jpg", baos);
+//            return baos.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+
     public static byte[] convert(BufferedImage screenshot) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {

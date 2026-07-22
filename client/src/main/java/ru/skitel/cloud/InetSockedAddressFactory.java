@@ -2,9 +2,9 @@ package ru.skitel.cloud;
 
 import java.net.InetSocketAddress;
 
-public final class ClientConnectionSingleton {
+public final class InetSockedAddressFactory {
 
-    private ClientConnectionSingleton() {
+    private InetSockedAddressFactory() {
     }
 
     private static final InetSocketAddress inetSocketAddress;

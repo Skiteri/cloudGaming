@@ -1,6 +1,7 @@
 package ru.skitel.cloud.service.datagram;
 
 import ru.skitel.cloud.GlobalSettings;
+import ru.skitel.cloud.PacketSettings;
 import ru.skitel.cloud.api.Receiver;
 
 import java.io.IOException;
@@ -41,10 +42,13 @@ public class DatagramServerReceiver implements Receiver<byte[]> {
 
     private static class DatagramInfo {
 
-        private final DatagramPacket pack = new DatagramPacket(new byte[65506], 65506); //todo: hardcoded
-        private final DatagramSocket socket = new DatagramSocket(GlobalSettings.getConnectionType().getPort());
+        private final DatagramPacket pack;
+        private final DatagramSocket socket;
 
         public DatagramInfo() throws SocketException {
+            PacketSettings packetSettings = GlobalSettings.getPacketSettings();
+            pack = new DatagramPacket(new byte[packetSettings.getPacketLength()], packetSettings.getPacketLength());
+            socket = new DatagramSocket(GlobalSettings.getConnectionType().getPort());
         }
 
         public void receive() {
