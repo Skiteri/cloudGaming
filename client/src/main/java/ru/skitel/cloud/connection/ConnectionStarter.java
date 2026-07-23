@@ -1,8 +1,11 @@
 package ru.skitel.cloud.connection;
 
-public abstract class ClientConnector {
+public abstract class ConnectionStarter {
 
-    public ClientConnector() {
+    public ConnectionStarter() {
+    }
+
+    public final void start() {
         openConnection();
     }
 

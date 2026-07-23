@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.settings;
 
 import lombok.Getter;
 

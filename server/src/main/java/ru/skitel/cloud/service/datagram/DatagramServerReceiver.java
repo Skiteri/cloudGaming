@@ -1,7 +1,7 @@
 package ru.skitel.cloud.service.datagram;
 
 import ru.skitel.cloud.GlobalSettings;
-import ru.skitel.cloud.PacketSettings;
+import ru.skitel.cloud.settings.PacketSettings;
 import ru.skitel.cloud.api.Receiver;
 
 import java.io.IOException;

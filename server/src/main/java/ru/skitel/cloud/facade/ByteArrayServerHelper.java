@@ -2,7 +2,7 @@ package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.Drawer;
 import ru.skitel.cloud.GlobalSettings;
-import ru.skitel.cloud.PacketSettings;
+import ru.skitel.cloud.settings.PacketSettings;
 import ru.skitel.cloud.api.ImageCollectorService;
 import ru.skitel.cloud.api.ServerHelper;
 import ru.skitel.cloud.service.datagram.DatagramImageCollectorServiceImpl;
@@ -28,7 +28,7 @@ public class ByteArrayServerHelper extends ServerHelper<byte[]> {
         byte[] result = new byte[packetSettings.getDataLength()];
 
         ImageCollectorService collectorService = new DatagramImageCollectorServiceImpl();
-        collectorService.collect(packetSettings.getIterations(), result);
+        collectorService.collect();
         return result;
     }
 

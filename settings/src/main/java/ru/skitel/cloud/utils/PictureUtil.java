@@ -1,6 +1,7 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.utils;
 
-import java.awt.*;
+import ru.skitel.cloud.GlobalSettings;
+
 import java.nio.ByteBuffer;
 
 public class PictureUtil {

@@ -3,8 +3,10 @@ package ru.skitel.cloud.integrations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skitel.cloud.GlobalSettings;
-import ru.skitel.cloud.Mode;
-import ru.skitel.cloud.Resolution;
+import ru.skitel.cloud.facade.BufferedImageClientHelper;
+import ru.skitel.cloud.settings.Mode;
+import ru.skitel.cloud.settings.PacketSettings;
+import ru.skitel.cloud.settings.Resolution;
 import ru.skitel.cloud.setting.ServerModeResolver;
 import ru.skitel.cloud.converter.ImageConverter;
 
@@ -18,12 +20,32 @@ import static ru.skitel.cloud.utils.ImageUtil.create3by3;
 public class IntegrationTest {
 
     @Test
-    public void checkIntegration() throws ExecutionException, InterruptedException, IOException {
-        GlobalSettings.setSERVER_MODE(Mode.BYTE_ARRAY_MODE);
+    public void testDataLengthLessThanPacketLength() throws ExecutionException, InterruptedException, IOException {
+        GlobalSettings.setRESOLUTION(Resolution.RESOLUTION_4k);
+        GlobalSettings.setPACKET_SETTINGS(new PacketSettings(65507, Resolution.RESOLUTION_4k.getPixelsCount()));
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Callable<byte[]> task = () -> (byte[]) new BufferedImageServerHelperTest().receiveScreen();
+        Future<byte[]> future = executorService.submit(task);
+
+        BufferedImage expected = create3by3();
+        byte[] convert = ImageConverter.convert(expected);
+
+        BufferedImageClientHelper a = new BufferedImageClientHelper();
+        a.getAndSendScreenshot();
+
+        byte[] gotImage = future.get();
+
+        Assertions.assertArrayEquals(convert, gotImage);
+    }
+
+    @Test
+    public void testDataLengthMoreThanPacketLength() throws ExecutionException, InterruptedException, IOException {
+        GlobalSettings.setPACKET_SETTINGS(new PacketSettings(65507, 8400));
         GlobalSettings.setRESOLUTION(Resolution.RESOLUTION_ANY);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<byte[]> task = () -> (byte[]) ServerModeResolver.getServerHelper().receiveScreen();
+        Callable<byte[]> task = () -> (byte[]) new BufferedImageServerHelperTest().receiveScreen();
         Future<byte[]> future = executorService.submit(task);
 
         BufferedImage expected = create3by3();
@@ -36,17 +58,4 @@ public class IntegrationTest {
 
         Assertions.assertArrayEquals(convert, gotImage);
     }
-
-    private void initColors(Color[] colors) {
-        colors[0] = Color.red;
-        colors[1] = Color.blue;
-        colors[2] = Color.black;
-        colors[3] = Color.yellow;
-        colors[4] = Color.gray;
-        colors[5] = Color.green;
-        colors[6] = Color.white;
-        colors[7] = Color.magenta;
-        colors[8] = Color.orange;
-    }
-
 }

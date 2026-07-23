@@ -1,12 +1,12 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.settings;
 
 import lombok.Getter;
 
 @Getter
 public enum ConnectionType {
 
-    LOCAL(ConnectionUtil.LOCALHOST, ConnectionUtil.LOCALPORT),
-    WI_FI(ConnectionUtil.HOST, ConnectionUtil.PORT);
+    LOCAL("localhost", 8080),
+    WI_FI("192.168.0.22", 5643);
 
     private final String hostname;
     private final int port;

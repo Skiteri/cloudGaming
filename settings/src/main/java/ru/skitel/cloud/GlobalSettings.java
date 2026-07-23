@@ -1,6 +1,10 @@
 package ru.skitel.cloud;
 
 import lombok.Setter;
+import ru.skitel.cloud.settings.ConnectionType;
+import ru.skitel.cloud.settings.Mode;
+import ru.skitel.cloud.settings.PacketSettings;
+import ru.skitel.cloud.settings.Resolution;
 
 public final class GlobalSettings {
 
@@ -16,7 +20,7 @@ public final class GlobalSettings {
     @Setter
     private static ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
     @Setter
-    private static PacketSettings PACKET_SETTINGS = new PacketSettings(65507, 8400);
+    private static PacketSettings PACKET_SETTINGS = new PacketSettings(65507, 1); //todo: откуда брать длину пакета?
 
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 

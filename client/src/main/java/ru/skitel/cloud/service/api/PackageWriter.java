@@ -1,4 +1,4 @@
-package ru.skitel.cloud.connection;
+package ru.skitel.cloud.service.api;
 
 import java.io.IOException;
 

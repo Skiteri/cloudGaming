@@ -1,5 +1,7 @@
 package ru.skitel.cloud;
 
+import ru.skitel.cloud.rubbish.Picture;
+
 import java.awt.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;

@@ -1,7 +1,6 @@
 package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.BufferedImageCanvas;
-import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.api.ServerHelper;
 import ru.skitel.cloud.service.datagram.DatagramImageCollectorServiceImpl;
 import ru.skitel.cloud.api.ImageCollectorService;
@@ -9,7 +8,6 @@ import ru.skitel.cloud.api.ImageCollectorService;
 import java.awt.image.BufferedImage;
 
 import static ru.skitel.cloud.Drawer.frame;
-import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
 
@@ -26,14 +24,10 @@ public class BufferedImageServerHelper extends ServerHelper<BufferedImage> {
     }
 
     public BufferedImage receiveScreen() {
-        int length = GlobalSettings.getPacketSettings().getDataLength();
-        int iterations = GlobalSettings.getPacketSettings().getIterations();
-
-        byte[] result = new byte[length];
+//        int length = GlobalSettings.getPacketSettings().getDataLength();
 
         ImageCollectorService collectorService = new DatagramImageCollectorServiceImpl();
-        collectorService.collect(iterations, result);
-        return convert(result);
+        return collectorService.collect();
     }
 
 

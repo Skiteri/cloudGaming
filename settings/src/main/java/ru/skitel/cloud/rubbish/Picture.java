@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.rubbish;
 
 import lombok.Setter;
 

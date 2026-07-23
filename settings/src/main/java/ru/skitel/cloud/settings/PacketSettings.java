@@ -1,4 +1,4 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.settings;
 
 import lombok.Getter;
 
@@ -14,6 +14,6 @@ public class PacketSettings {
     public PacketSettings(int packetLength, int dataLength) {
         this.packetLength = packetLength;
         this.dataLength = dataLength;
-        iterations = (int) Math.ceil((double) dataLength / packetLength);
+        iterations = (int) Math.ceil((double) dataLength / packetLength) - 1;
     }
 }

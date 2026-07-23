@@ -5,6 +5,6 @@ import java.awt.image.BufferedImage;
 
 public interface ImageCollectorService {
 
-     BufferedImage collect(int iterations, byte[] result);
+     BufferedImage collect();
 
 }

@@ -1,12 +1,13 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.InetSockedAddressFactory;
+import ru.skitel.cloud.InetSocketAddressSingleton;
+import ru.skitel.cloud.service.api.PackageWriter;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 
-public class SocketChannelConnection extends ClientConnector implements PackageWriter<ByteBuffer> {
+public class SocketChannelConnection extends ConnectionStarter implements PackageWriter<ByteBuffer> {
 
     private SocketChannel socket;
 
@@ -14,7 +15,7 @@ public class SocketChannelConnection extends ClientConnector implements PackageW
     public void openConnection() throws RuntimeException {
         try {
             socket = SocketChannel.open();
-            socket.connect(InetSockedAddressFactory.getInstance());
+            socket.connect(InetSocketAddressSingleton.getInstance());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

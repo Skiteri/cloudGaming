@@ -2,7 +2,7 @@ package ru.skitel.cloud.setting;
 
 import lombok.Getter;
 import ru.skitel.cloud.GlobalSettings;
-import ru.skitel.cloud.Mode;
+import ru.skitel.cloud.settings.Mode;
 import ru.skitel.cloud.facade.BufferedImageServerHelper;
 import ru.skitel.cloud.facade.ByteArrayServerHelper;
 import ru.skitel.cloud.api.ServerHelper;

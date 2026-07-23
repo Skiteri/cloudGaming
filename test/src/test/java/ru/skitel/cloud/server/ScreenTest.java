@@ -29,7 +29,7 @@ public class ScreenTest {
 
         Mockito.when(datagramServerReceiver.getPack()).thenReturn(packet);
 
-        collector.collect(iterations, result);
+        collector.collect();
 
         Assertions.assertArrayEquals(result, expected);
     }
@@ -48,7 +48,7 @@ public class ScreenTest {
 
         Mockito.doReturn(packet).when(datagramServerReceiver).getPack();
 
-        collector.collect(iterations, result);
+        collector.collect();
 
         Assertions.assertArrayEquals(result, expected);
     }

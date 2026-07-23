@@ -25,6 +25,8 @@
                         </path>
                         <!-- Add MapStruct if you use it -->
                     </annotationProcessorPaths>
+                    <source>9</source>
+                    <target>9</target>
                 </configuration>
             </plugin>
         </plugins>

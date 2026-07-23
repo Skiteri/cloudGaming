@@ -1,6 +1,6 @@
 package ru.skitel.cloud.adapter;
 
-import ru.skitel.cloud.Resolution;
+import ru.skitel.cloud.settings.Resolution;
 
 import java.awt.*;
 

@@ -35,7 +35,7 @@ public class BufferedImageServerHelperTest extends ServerHelper<byte[]> {
         byte[] result = new byte[GlobalSettings.getPacketSettings().getDataLength()];
 
         ImageCollectorService collectorService = new DatagramImageCollectorServiceImpl();
-        collectorService.collect(GlobalSettings.getPacketSettings().getIterations(), result);
+        collectorService.collect();
         return result;
     }
 }
