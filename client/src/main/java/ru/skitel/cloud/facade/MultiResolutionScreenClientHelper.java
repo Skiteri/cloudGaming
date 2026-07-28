@@ -24,11 +24,11 @@ public class MultiResolutionScreenClientHelper extends ClientHelper<MultiResolut
 
     @Override
     public void sendSnapshot(MultiResolutionImage snapshot) {
-        byte[] picture = convert(snapshot);
-        try {
-            datagramPackageWriter.write(picture);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//        byte[] picture = convert(snapshot);
+//        try {
+//            datagramPackageWriter.write(picture);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

@@ -1,12 +1,12 @@
 package ru.skitel.cloud;
 
 import ru.skitel.cloud.api.ServerHelper;
-import ru.skitel.cloud.setting.ServerModeResolver;
+import ru.skitel.cloud.setting.ServerModeSingleton;
 
 public class ServerApp implements Runnable {
 
-    public static void main(String[] args) {
-        ServerModeResolver.getServerHelper().receiveAndDraw();
+    static void main() {
+        ServerModeSingleton.INSTANCE.getServerHelper().receiveAndDraw();
     }
 
     @Override

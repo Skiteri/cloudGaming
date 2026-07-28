@@ -9,6 +9,7 @@ import java.awt.image.MultiResolutionImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public final class ImageConverter {
 
@@ -16,8 +17,8 @@ public final class ImageConverter {
     }
 
     public static BufferedImage convert(byte[] bytes) {
-        try {
-            return ImageIO.read(new ByteArrayInputStream(bytes));
+        try (InputStream ios = new ByteArrayInputStream(bytes)) {
+            return ImageIO.read(ios);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -34,8 +35,7 @@ public final class ImageConverter {
 //    }
 
     public static byte[] convert(BufferedImage screenshot) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        try {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
             ImageIO.write(screenshot, "jpg", baos);
             return baos.toByteArray();
         } catch (IOException e) {
@@ -43,33 +43,33 @@ public final class ImageConverter {
         }
     }
 
-    public static byte[] convert(MultiResolutionImage mrImage) {
-        // Get the best resolution variant for the requested dimensions
-        Image resolutionVariant = mrImage.getResolutionVariant(GlobalSettings.getResolution().getWidth(), GlobalSettings.getResolution().getHeight());
-
-        // Convert Image to BufferedImage
-        BufferedImage bImage;
-        if (resolutionVariant instanceof BufferedImage) {
-            bImage = (BufferedImage) resolutionVariant;
-        } else {
-            bImage = new BufferedImage(
-                    resolutionVariant.getWidth(null),
-                    resolutionVariant.getHeight(null),
-                    BufferedImage.TYPE_INT_ARGB
-            );
-            Graphics2D g2d = bImage.createGraphics();
-            g2d.drawImage(resolutionVariant, 0, 0, null);
-            g2d.dispose();
-        }
-
-        // Write BufferedImage to byte array
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ImageIO.write(bImage, "png", baos);
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    public static byte[] convert(MultiResolutionImage mrImage) {
+//        // Get the best resolution variant for the requested dimensions
+//        Image resolutionVariant = mrImage.getResolutionVariant(GlobalSettings.getResolution().getWidth(), GlobalSettings.getResolution().getHeight());
+//
+//        // Convert Image to BufferedImage
+//        BufferedImage bImage;
+//        if (resolutionVariant instanceof BufferedImage) {
+//            bImage = (BufferedImage) resolutionVariant;
+//        } else {
+//            bImage = new BufferedImage(
+//                    resolutionVariant.getWidth(null),
+//                    resolutionVariant.getHeight(null),
+//                    BufferedImage.TYPE_INT_ARGB
+//            );
+//            Graphics2D g2d = bImage.createGraphics();
+//            g2d.drawImage(resolutionVariant, 0, 0, null);
+//            g2d.dispose();
+//        }
+//
+//        // Write BufferedImage to byte array
+//        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+//            ImageIO.write(bImage, "png", baos);
+//            return baos.toByteArray();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
 //    public static byte[] convert(BufferedImage screenshot) {
 //        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();

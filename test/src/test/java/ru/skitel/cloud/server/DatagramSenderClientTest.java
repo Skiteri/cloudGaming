@@ -1,12 +1,9 @@
 package ru.skitel.cloud.server;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.integrations.BufferedImageServerHelperTest;
 import ru.skitel.cloud.integrations.IntegrationHelper;
-import ru.skitel.cloud.settings.Resolution;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -23,7 +20,8 @@ public class DatagramSenderClientTest {
             BufferedImageServerHelperTest bufferedImageServerHelperTest = new BufferedImageServerHelperTest();
             return (byte[]) bufferedImageServerHelperTest.receiveScreen();
         };
-        Future<byte[]> future = Executors.newSingleThreadExecutor().submit(task);
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Future<byte[]> future = executorService.submit(task);
 
         IntegrationHelper a = new IntegrationHelper();
         a.getAndSendScreenshot();
@@ -31,7 +29,7 @@ public class DatagramSenderClientTest {
         BufferedImage expected = create3by3();
         byte[] convert = convert(expected);
         byte[] gotImage = future.get();
-
+        executorService.shutdownNow();
         Assertions.assertArrayEquals(convert, gotImage);
     }
 

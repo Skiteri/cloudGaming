@@ -9,35 +9,22 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class DatagramServerReceiver implements Receiver<byte[]> {
+public class DatagramServerReceiver<T> implements Receiver<T> {
 
     private final DatagramInfo datagramInfo;
 
-    private DatagramServerReceiver(DatagramInfo datagramInfo) {
-        this.datagramInfo = datagramInfo;
+    public DatagramServerReceiver() {
+        try {
+            this.datagramInfo = new DatagramInfo();
+        } catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public byte[] getPack() {
+    public T getPack() {
         datagramInfo.receive();
-        return datagramInfo.getData();
-    }
-
-    public static final class DatagramSocketFactory {
-        static {
-            try {
-                datagramServerReceiver = new DatagramServerReceiver(new DatagramInfo());
-            } catch (SocketException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        private static final DatagramServerReceiver datagramServerReceiver;
-
-
-        public static DatagramServerReceiver getInstance() {
-            return datagramServerReceiver;
-        }
-
+        return (T) datagramInfo.getData();
     }
 
     private static class DatagramInfo {

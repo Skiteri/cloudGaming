@@ -1,30 +1,30 @@
-package ru.skitel.cloud.service.datagram;
+package ru.skitel.cloud.service.collector;
 
 import ru.skitel.cloud.GlobalSettings;
+import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
+import ru.skitel.cloud.api.Receiver;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class DatagramImageCollectorServiceImpl implements ImageCollectorService {
+public class BufferedImageCollectorServiceImpl implements ImageCollectorService<BufferedImage> {
 
-    private final DatagramServerReceiver serverConnection;
+    private final Receiver<byte[]> serverConnection;
 
-    public DatagramImageCollectorServiceImpl(DatagramServerReceiver datagramServerReceiver) {
+    public BufferedImageCollectorServiceImpl(Receiver<byte[]> datagramServerReceiver) {
         this.serverConnection = datagramServerReceiver;
     }
 
-    public DatagramImageCollectorServiceImpl() {
-        serverConnection = DatagramServerReceiver.DatagramSocketFactory.getInstance();
+    public BufferedImageCollectorServiceImpl() {
+        serverConnection = ReceiverHolder.INSTANCE.getInstance();
     }
-
 
     public BufferedImage collect() {
         int dataLength = ByteBuffer.wrap(serverConnection.getPack()).getInt();
         int iterations = (int) Math.ceil((double) dataLength / GlobalSettings.getPacketSettings().getPacketLength()) - 1;
-        System.out.println(dataLength + " " + iterations);
         byte[] result = new byte[dataLength];
 
         for (int i = 0; i <= iterations; i++) {
@@ -36,11 +36,4 @@ public class DatagramImageCollectorServiceImpl implements ImageCollectorService 
         return convert(result);
     }
 
-//    public BufferedImage collect() {
-//        byte[] result = new byte[100000];
-//        int receiveBufferSize = serverConnection.getReceiveBufferSize();
-//        byte[] data = serverConnection.getPack();
-//        System.arraycopy(data, 0, result, data.length, data.length);
-//        return convert(result);
-//    }
 }

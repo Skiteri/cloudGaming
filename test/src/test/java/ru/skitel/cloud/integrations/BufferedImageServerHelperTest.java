@@ -1,17 +1,16 @@
 package ru.skitel.cloud.integrations;
 
 import ru.skitel.cloud.BufferedImageCanvas;
-import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.api.ImageCollectorService;
 import ru.skitel.cloud.api.ServerHelper;
-import ru.skitel.cloud.service.datagram.DatagramImageCollectorServiceImpl;
+import ru.skitel.cloud.service.collector.ByteArrayCollectorServiceImpl;
 
 import java.awt.image.BufferedImage;
 
 import static ru.skitel.cloud.Drawer.frame;
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class BufferedImageServerHelperTest extends ServerHelper<byte[]> {
+public class BufferedImageServerHelperTest implements ServerHelper<byte[]> {
 
     public void receiveAndDraw() {
         BufferedImage bufferedImage = convert(receiveScreen());
@@ -32,10 +31,7 @@ public class BufferedImageServerHelperTest extends ServerHelper<byte[]> {
 
     @Override
     public byte[] receiveScreen() {
-        byte[] result = new byte[GlobalSettings.getPacketSettings().getDataLength()];
-
-        ImageCollectorService collectorService = new DatagramImageCollectorServiceImpl();
-        collectorService.collect();
-        return result;
+        ImageCollectorService<byte[]> collectorService = new ByteArrayCollectorServiceImpl();
+        return collectorService.collect();
     }
 }

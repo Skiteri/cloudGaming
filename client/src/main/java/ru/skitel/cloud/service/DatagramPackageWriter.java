@@ -54,12 +54,12 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
         int dataLength = data.length;
         sendLength(dataLength);
         int offset = 0;
-        DatagramPacket datagramPacket = new DatagramPacket(data, offset, packetLength);
+        DatagramPacket datagramPacket = new DatagramPacket(data, offset, dataLength - offset);
         while (offset + packetLength < dataLength) {
             datagramPacket.setData(data, offset, packetLength);
             datagramSender.send(datagramPacket);
             try {
-                Thread.sleep(16);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

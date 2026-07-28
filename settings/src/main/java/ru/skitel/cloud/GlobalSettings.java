@@ -1,26 +1,18 @@
 package ru.skitel.cloud;
 
-import lombok.Setter;
-import ru.skitel.cloud.settings.ConnectionType;
-import ru.skitel.cloud.settings.Mode;
-import ru.skitel.cloud.settings.PacketSettings;
-import ru.skitel.cloud.settings.Resolution;
+import ru.skitel.cloud.settings.*;
 
 public final class GlobalSettings {
 
     private GlobalSettings() {
     }
 
-    @Setter
-    private static Resolution RESOLUTION = Resolution.RESOLUTION_4k;
-    @Setter
-    private static Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
-    @Setter
-    private static Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
-    @Setter
-    private static ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
-    @Setter
-    private static PacketSettings PACKET_SETTINGS = new PacketSettings(65507, 1); //todo: откуда брать длину пакета?
+    private static final Resolution RESOLUTION = Resolution.RESOLUTION_4k;
+    private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
+    private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
+    private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
+    private static final PacketSettings PACKET_SETTINGS = new PacketSettings(65507);
+    private static final TypeMode TYPE_MODE = TypeMode.DATAGRAM_PACKET;
 
     //private static ProtocolMode protocolMode; todo: tcp by default. Сделать на С++
 
@@ -36,6 +28,10 @@ public final class GlobalSettings {
     public static ConnectionType getConnectionType() {
         return CONNECTION_TYPE;
     }
-    public static PacketSettings getPacketSettings() {return PACKET_SETTINGS;
+    public static PacketSettings getPacketSettings() {
+        return PACKET_SETTINGS;
+    }
+    public static TypeMode getTypeMode() {
+        return TYPE_MODE;
     }
 }
