@@ -6,7 +6,14 @@ import ru.skitel.cloud.setting.ServerModeSingleton;
 public class ServerApp implements Runnable {
 
     static void main() {
-        ServerModeSingleton.INSTANCE.getServerHelper().receiveAndDraw();
+        long startTime = System.currentTimeMillis();
+        ServerHelper<?> serverHelper = ServerModeSingleton.INSTANCE.getServerHelper();
+        int i = 0;
+        while (i < 60) {
+            serverHelper.receiveAndDraw();
+            i++;
+        }
+        System.out.println(System.currentTimeMillis() - startTime);
     }
 
     @Override

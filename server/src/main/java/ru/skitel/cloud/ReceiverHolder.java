@@ -1,24 +1,24 @@
 package ru.skitel.cloud;
 
 import lombok.Getter;
-import ru.skitel.cloud.api.Receiver;
-import ru.skitel.cloud.service.datagram.DatagramServerReceiver;
+import ru.skitel.cloud.api.ReceiverService;
+import ru.skitel.cloud.service.datagram.ByteArrayReceiverService;
 
 @Getter
 public enum ReceiverHolder {
     INSTANCE;
 
-    private final Receiver<byte[]> receiver = ReceiverFactory.create();
+    private final ReceiverService<byte[]> receiverService = ReceiverFactory.create();
 
     @SuppressWarnings(value = "unchecked")
-    public <T> Receiver<T> getInstance() {
-        return (Receiver<T>) receiver;
+    public <T> ReceiverService<T> getInstance() {
+        return (ReceiverService<T>) receiverService;
     }
 
     public static class ReceiverFactory {
-        private static <T> Receiver<T> create() {
+        private static <T> ReceiverService<T> create() {
             return switch (GlobalSettings.getTypeMode()) {
-                case DATAGRAM_PACKET -> new DatagramServerReceiver<>();
+                case DATAGRAM_PACKET -> new ByteArrayReceiverService<>();
                 default -> throw new RuntimeException();
             };
         }

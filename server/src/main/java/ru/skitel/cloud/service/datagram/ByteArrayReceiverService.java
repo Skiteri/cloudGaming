@@ -2,18 +2,18 @@ package ru.skitel.cloud.service.datagram;
 
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.settings.PacketSettings;
-import ru.skitel.cloud.api.Receiver;
+import ru.skitel.cloud.api.ReceiverService;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
-public class DatagramServerReceiver<T> implements Receiver<T> {
+public class ByteArrayReceiverService<T> implements ReceiverService<T> {
 
     private final DatagramInfo datagramInfo;
 
-    public DatagramServerReceiver() {
+    public ByteArrayReceiverService() {
         try {
             this.datagramInfo = new DatagramInfo();
         } catch (SocketException e) {

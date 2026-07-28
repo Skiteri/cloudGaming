@@ -1,7 +1,7 @@
 package ru.skitel.cloud;
 
-import ru.skitel.cloud.api.Receiver;
+import ru.skitel.cloud.api.ReceiverService;
 
 public interface ReceiverTypes {
-    <T> Receiver<T> getReceiver();
+    <T> ReceiverService<T> getReceiver();
 }

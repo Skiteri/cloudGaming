@@ -3,7 +3,7 @@ package ru.skitel.cloud.service.collector;
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
-import ru.skitel.cloud.api.Receiver;
+import ru.skitel.cloud.api.ReceiverService;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -12,10 +12,10 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class BufferedImageCollectorServiceImpl implements ImageCollectorService<BufferedImage> {
 
-    private final Receiver<byte[]> serverConnection;
+    private final ReceiverService<byte[]> serverConnection;
 
-    public BufferedImageCollectorServiceImpl(Receiver<byte[]> datagramServerReceiver) {
-        this.serverConnection = datagramServerReceiver;
+    public BufferedImageCollectorServiceImpl(ReceiverService<byte[]> datagramServerReceiverService) {
+        this.serverConnection = datagramServerReceiverService;
     }
 
     public BufferedImageCollectorServiceImpl() {
@@ -29,7 +29,6 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
 
         for (int i = 0; i <= iterations; i++) {
             byte[] data = serverConnection.getPack();
-            System.out.println(i);
             int length = data.length * (i + 1) > result.length ? result.length - i * data.length : data.length;
             System.arraycopy(data, 0, result, i * data.length, length);
         }

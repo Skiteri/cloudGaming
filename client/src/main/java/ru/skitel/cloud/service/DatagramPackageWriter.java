@@ -59,12 +59,11 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
             datagramPacket.setData(data, offset, packetLength);
             datagramSender.send(datagramPacket);
             try {
-                Thread.sleep(1);
+                Thread.sleep(2);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
             offset += packetLength;
-            System.out.println(offset);
         }
         datagramPacket.setLength(dataLength - offset);
         datagramSender.send(datagramPacket);

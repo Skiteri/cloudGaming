@@ -3,13 +3,13 @@ package ru.skitel.cloud.service.collector;
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
-import ru.skitel.cloud.api.Receiver;
+import ru.skitel.cloud.api.ReceiverService;
 
 import java.nio.ByteBuffer;
 
 public class ByteArrayCollectorServiceImpl implements ImageCollectorService<byte[]> {
 
-    private final Receiver<byte[]> serverConnection;
+    private final ReceiverService<byte[]> serverConnection;
 
     public ByteArrayCollectorServiceImpl() {
         serverConnection = ReceiverHolder.INSTANCE.getInstance();

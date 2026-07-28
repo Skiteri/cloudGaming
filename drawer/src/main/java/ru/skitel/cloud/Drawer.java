@@ -9,18 +9,18 @@ public class Drawer {
 
     @Setter
     public static JFrame frame = new JFrame("Рисование по точкам");
+    static BufferedImageCanvas canvas = new BufferedImageCanvas();
+
 
     static {
+        frame.setVisible(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(GlobalSettings.getResolution().getWidth(), GlobalSettings.getResolution().getHeight());
         frame.setLocationRelativeTo(null); // Center on screen
-    }
-
-    public static void drawScreen(BufferedImage bufferedImage) {
-        BufferedImageCanvas canvas = new BufferedImageCanvas();
-        canvas.setImg(bufferedImage);
-        frame.setVisible(true);
         frame.add(canvas);
     }
 
+    public static void setImage(BufferedImage bufferImage) {
+        canvas.setImg(bufferImage);
+    }
 }

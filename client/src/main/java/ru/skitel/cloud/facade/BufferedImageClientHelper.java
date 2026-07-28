@@ -12,7 +12,7 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
 
     private final BufferedImageScreenCaptureServiceImpl bufferedImageScreenCaptureService = new BufferedImageScreenCaptureServiceImpl();
-    private final PackageWriter datagramPackageWriter = new DatagramPackageWriter();
+    private final PackageWriter<byte[]> datagramPackageWriter = new DatagramPackageWriter();
 
     @Override
     public void getAndSendScreenshot() {
@@ -23,6 +23,7 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
     @Override
     public void sendSnapshot(BufferedImage snapshot) {
         byte[] picture = convert(snapshot);
+        System.out.println(picture.length);
         try {
             datagramPackageWriter.write(picture);
         } catch (IOException e) {

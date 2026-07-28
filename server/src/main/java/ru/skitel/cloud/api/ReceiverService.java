@@ -1,5 +1,5 @@
 package ru.skitel.cloud.api;
 
-public interface Receiver<T> {
+public interface ReceiverService<T> {
     T getPack();
 }

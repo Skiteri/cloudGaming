@@ -1,11 +1,7 @@
 package ru.skitel.cloud.server;
 
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.skitel.cloud.service.collector.BufferedImageCollectorServiceImpl;
-import ru.skitel.cloud.service.datagram.DatagramServerReceiver;
-import ru.skitel.cloud.api.ImageCollectorService;
 
 
 @ExtendWith(MockitoExtension.class)

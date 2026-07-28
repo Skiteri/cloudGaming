@@ -1,5 +1,7 @@
 package ru.skitel.cloud;
 
+import ru.skitel.cloud.facade.ClientHelper;
+
 import java.io.IOException;
 
 public class ClientApp implements Runnable {
@@ -9,7 +11,12 @@ public class ClientApp implements Runnable {
     }
 
     public static void start() throws IOException {
-        ClientModeResolver.getClientHelper().getAndSendScreenshot();
+        ClientHelper<?> clientHelper = ClientModeResolver.getClientHelper();
+        int i = 0;
+        while (i < 60) {
+            clientHelper.getAndSendScreenshot();
+            i++;
+        }
     }
 
     @Override
