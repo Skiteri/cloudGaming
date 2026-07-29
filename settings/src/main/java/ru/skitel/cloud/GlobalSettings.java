@@ -10,7 +10,7 @@ public final class GlobalSettings {
     private static final Resolution RESOLUTION = Resolution.RESOLUTION_4k;
     private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
     private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
-    private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
+    private static final ConnectionType CONNECTION_TYPE = ConnectionType.WI_FI;
     private static final PacketSettings PACKET_SETTINGS = new PacketSettings(65507);
     private static final TypeMode TYPE_MODE = TypeMode.DATAGRAM_PACKET;
 

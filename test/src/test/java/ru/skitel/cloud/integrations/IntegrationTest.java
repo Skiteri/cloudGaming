@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.*;
 
+import static ru.skitel.cloud.converter.ImageConverter.convert;
 import static ru.skitel.cloud.utils.ImageUtil.create3by3;
 
 public class IntegrationTest {
@@ -22,12 +23,12 @@ public class IntegrationTest {
         Future<byte[]> future = executorService.submit(task);
 
         BufferedImage expected = create3by3();
-        byte[] convert = ImageConverter.convert(expected);
 
         ClientHelperTest a = new ClientHelperTest();
         a.getAndSendScreenshot();
-
+        byte[] convert = convert(expected);
         byte[] gotImage = future.get();
+        executorService.shutdownNow();
 
         Assertions.assertArrayEquals(convert, gotImage);
     }

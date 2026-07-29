@@ -59,7 +59,7 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
             datagramPacket.setData(data, offset, packetLength);
             datagramSender.send(datagramPacket);
             try {
-                Thread.sleep(2);
+                Thread.sleep(8);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

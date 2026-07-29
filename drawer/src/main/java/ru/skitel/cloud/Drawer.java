@@ -22,5 +22,7 @@ public class Drawer {
 
     public static void setImage(BufferedImage bufferImage) {
         canvas.setImg(bufferImage);
+        canvas.repaint();
     }
+
 }
