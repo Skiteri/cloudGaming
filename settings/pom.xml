@@ -9,4 +9,26 @@
 
     <artifactId>settings</artifactId>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <!-- Add Lombok if you use it -->
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.38</version> <!-- Use your current Lombok version -->
+                        </path>
+                        <!-- Add MapStruct if you use it -->
+                    </annotationProcessorPaths>
+                    <source>25</source>
+                    <target>25</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
