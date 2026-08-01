@@ -12,7 +12,6 @@ public class Drawer {
     public static JFrame frame = new JFrame("Рисование по точкам");
     static BufferedImageCanvas canvas = new BufferedImageCanvas();
 
-
     static {
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice gd = ge.getDefaultScreenDevice();
