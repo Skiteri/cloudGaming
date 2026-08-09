@@ -3,11 +3,10 @@ package ru.skitel.cloud.integrations;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skitel.cloud.client.ClientHelperTest;
-import ru.skitel.cloud.converter.ImageConverter;
+import ru.skitel.cloud.facade.ByteArrayServerHelper;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.concurrent.*;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
@@ -16,21 +15,22 @@ import static ru.skitel.cloud.utils.ImageUtil.create3by3;
 public class IntegrationTest {
 
     @Test
-    public void testDataLengthLessThanPacketLength() throws ExecutionException, InterruptedException, IOException {
+    public void testDataLengthLessThanPacketLength() {
+        try (ExecutorService executorService = Executors.newSingleThreadExecutor()) {
+            Callable<byte[]> task = () -> (byte[]) new ByteArrayServerHelper().receiveScreen();
+            Future<byte[]> future = executorService.submit(task);
 
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
-        Callable<byte[]> task = () -> (byte[]) new BufferedImageServerHelperTest().receiveScreen();
-        Future<byte[]> future = executorService.submit(task);
+            BufferedImage expected = create3by3();
 
-        BufferedImage expected = create3by3();
-
-        ClientHelperTest a = new ClientHelperTest();
-        a.getAndSendScreenshot();
-        byte[] convert = convert(expected);
-        byte[] gotImage = future.get();
-        executorService.shutdownNow();
-
-        Assertions.assertArrayEquals(convert, gotImage);
+            ClientHelperTest a = new ClientHelperTest();
+            a.getAndSendScreenshot();
+            byte[] convert = convert(expected);
+            byte[] gotImage = future.get();
+            executorService.shutdownNow();
+            Assertions.assertArrayEquals(convert, gotImage);
+        } catch (Exception e) {
+            Assertions.fail();
+        }
     }
 
 //    @Test

@@ -14,10 +14,6 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
 
     private final ReceiverService<byte[]> serverConnection;
 
-    public BufferedImageCollectorServiceImpl(ReceiverService<byte[]> datagramServerReceiverService) {
-        this.serverConnection = datagramServerReceiverService;
-    }
-
     public BufferedImageCollectorServiceImpl() {
         serverConnection = ReceiverHolder.INSTANCE.getInstance();
     }
@@ -34,5 +30,4 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
         }
         return convert(result);
     }
-
 }

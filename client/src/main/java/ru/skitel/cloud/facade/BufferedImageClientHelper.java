@@ -23,18 +23,10 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
     @Override
     public void sendSnapshot(BufferedImage snapshot) {
         byte[] picture = convert(snapshot);
-        System.out.println(picture.length);
         try {
             datagramPackageWriter.write(picture);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-
-
-//    public void sendSnapshot(MyImage snapshot) {
-//        byte[] picture = convert(snapshot);
-//        getChannel().write(picture);
-//    }
-
 }

@@ -1,37 +1,29 @@
 package ru.skitel.cloud.integrations;
 
-import ru.skitel.cloud.BufferedImageCanvas;
+import ru.skitel.cloud.Drawer;
 import ru.skitel.cloud.api.ImageCollectorService;
 import ru.skitel.cloud.api.ServerHelper;
-import ru.skitel.cloud.service.collector.ByteArrayCollectorServiceImpl;
+import ru.skitel.cloud.service.collector.BufferedImageCollectorServiceImpl;
 
 import java.awt.image.BufferedImage;
 
-import static ru.skitel.cloud.Drawer.frame;
-import static ru.skitel.cloud.converter.ImageConverter.convert;
 
-public class BufferedImageServerHelperTest implements ServerHelper<byte[]> {
+public class BufferedImageServerHelperTest implements ServerHelper<BufferedImage> {
 
+    @Override
     public void receiveAndDraw() {
-        BufferedImage bufferedImage = convert(receiveScreen());
+        BufferedImage bufferedImage = receiveScreen();
         drawScreen(bufferedImage);
     }
 
     @Override
-    public void drawScreen(byte[] bufferImage) {
-
-    }
-
     public void drawScreen(BufferedImage bufferImage) {
-        BufferedImageCanvas canvas = new BufferedImageCanvas();
-        canvas.setImg(bufferImage);
-        frame.setVisible(true);
-        frame.add(canvas);
+        Drawer.setImage(bufferImage);
     }
 
     @Override
-    public byte[] receiveScreen() {
-        ImageCollectorService<byte[]> collectorService = new ByteArrayCollectorServiceImpl();
+    public BufferedImage receiveScreen() {
+        ImageCollectorService<BufferedImage> collectorService = new BufferedImageCollectorServiceImpl();
         return collectorService.collect();
     }
 }

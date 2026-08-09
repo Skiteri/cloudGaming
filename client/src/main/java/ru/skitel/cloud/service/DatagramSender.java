@@ -20,8 +20,13 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
     }
 
     @Override
-    public void send(DatagramPacket datagramPacket) throws IOException {
-        datagramSocket.send(datagramPacket);
+    public void send(DatagramPacket datagramPacket) {
+        try {
+            datagramSocket.send(datagramPacket);
+            Thread.sleep(400);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -12,10 +12,8 @@ public class ClientApp implements Runnable {
 
     public static void start() throws IOException {
         ClientHelper<?> clientHelper = ClientModeResolver.getClientHelper();
-        int i = 0;
-        while (i < 60) {
+        while (true) {
             clientHelper.getAndSendScreenshot();
-            i++;
         }
     }
 
