@@ -6,7 +6,6 @@ import ru.skitel.cloud.service.api.PackageWriter;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
-
 public class DatagramPackageWriter implements PackageWriter<byte[]> {
 
     private final DatagramSender datagramSender = new DatagramSender();
@@ -36,6 +35,6 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
                 (byte) dataLength
         };
         DatagramPacket datagramPacket = new DatagramPacket(bytes, 0, bytes.length);
-        datagramSender.send(datagramPacket);
+        datagramSender.sendWithoutTimeout(datagramPacket);
     }
 }

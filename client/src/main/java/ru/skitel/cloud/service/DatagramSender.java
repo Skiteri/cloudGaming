@@ -23,8 +23,16 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
     public void send(DatagramPacket datagramPacket) {
         try {
             datagramSocket.send(datagramPacket);
-            Thread.sleep(400);
+            Thread.sleep(1000);
         } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void sendWithoutTimeout(DatagramPacket datagramPacket) {
+        try {
+            datagramSocket.send(datagramPacket);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
