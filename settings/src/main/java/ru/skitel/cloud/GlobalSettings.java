@@ -7,7 +7,7 @@ public final class GlobalSettings {
     private GlobalSettings() {
     }
 
-    private static final Resolution RESOLUTION = Resolution.RESOLUTION_2K;
+    private static final Resolution RESOLUTION = Resolution.RESOLUTION_FULL_HD;
     private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
     private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
     private static final ConnectionType CONNECTION_TYPE = ConnectionType.WI_FI;

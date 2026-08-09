@@ -20,6 +20,7 @@ public class Drawer {
     }
 
     public static void setImage(BufferedImage bufferImage) {
+        System.out.println(bufferImage.getWidth() + " image" + bufferImage.getHeight());
         if (dimension == null) {
             dimension = new Dimension(bufferImage.getWidth(), bufferImage.getHeight());
             panel.setPreferredSize(dimension);

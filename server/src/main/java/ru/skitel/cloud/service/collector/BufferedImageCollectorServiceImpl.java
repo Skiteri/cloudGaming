@@ -34,6 +34,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
     }
 
     private BufferedImage scalingImage(BufferedImage bufferedImage) {
+        imageScaleHelper.init(bufferedImage.getWidth(), bufferedImage.getHeight());
         return imageScaleHelper.scaleImage(bufferedImage);
     }
 }
