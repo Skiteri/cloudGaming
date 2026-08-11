@@ -11,7 +11,7 @@ public abstract class ClientHelper<T>  {
     @Getter
     private static final PackageWriter channel = new DatagramPackageWriter();
 
-    public abstract void getAndSendScreenshot() throws IOException;
+    public abstract void getAndSendScreenshot();
     public abstract void sendSnapshot(T snapshot) throws IOException;
 
 }

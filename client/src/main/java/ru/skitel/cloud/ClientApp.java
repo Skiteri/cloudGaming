@@ -1,6 +1,7 @@
 package ru.skitel.cloud;
 
 import ru.skitel.cloud.facade.ClientHelper;
+import ru.skitel.cloud.utils.BenchmarkMethod;
 
 import java.io.IOException;
 
@@ -10,20 +11,16 @@ public class ClientApp implements Runnable {
         start();
     }
 
-    public static void start() throws IOException {
+    public static void start()  {
         ClientHelper<?> clientHelper = ClientModeResolver.getClientHelper();
         while (true) {
-            clientHelper.getAndSendScreenshot();
+            BenchmarkMethod.benchmarking(clientHelper::getAndSendScreenshot);
         }
     }
 
     @Override
     public void run() {
-        try {
             start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 }

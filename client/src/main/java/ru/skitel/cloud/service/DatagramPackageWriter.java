@@ -3,7 +3,6 @@ package ru.skitel.cloud.service;
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.service.api.PackageWriter;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 
 public class DatagramPackageWriter implements PackageWriter<byte[]> {
@@ -11,7 +10,7 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
     private final DatagramSender datagramSender = new DatagramSender();
 
     @Override
-    public void write(byte[] data) throws IOException {
+    public void write(byte[] data) {
         int packetLength = GlobalSettings.getPacketSettings().getPacketLength();
         int dataLength = data.length;
         int offset = 0;
@@ -35,6 +34,6 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
                 (byte) dataLength
         };
         DatagramPacket datagramPacket = new DatagramPacket(bytes, 0, bytes.length);
-        datagramSender.sendWithoutTimeout(datagramPacket);
+        datagramSender.send(datagramPacket);
     }
 }

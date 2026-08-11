@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 public class RobotScreenCapture {
 
     private final Robot robot;
+    private final Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
 
     public RobotScreenCapture() {
         try  {
@@ -16,6 +17,6 @@ public class RobotScreenCapture {
     }
 
     public BufferedImage getScreenshot() {
-        return robot.createScreenCapture(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds());
+        return robot.createScreenCapture(bounds);
     }
 }

@@ -28,7 +28,6 @@ public class ImageScaleHelper {
         int tempW = gd.getDisplayMode().getWidth();
         this.monitorHeight = (int) Math.round(tempH * scaleY);
         this.monitorWidth = (int) Math.round(tempW * scaleX);
-
     }
 
     public void init(int widthImage, int heightImage) {
