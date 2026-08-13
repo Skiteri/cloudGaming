@@ -6,8 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class ImageScaleHelper {
 //
-    private final int monitorWidth;
-    private final int monitorHeight;
 //    private final int monitorWidth = GlobalSettings.getResolution().getWidth();
 //    private final int monitorHeight = GlobalSettings.getResolution().getHeight();
     private int scaledWidth;
@@ -19,28 +17,19 @@ public class ImageScaleHelper {
     private Graphics2D g2d;
 
     public ImageScaleHelper() {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-        AffineTransform transform = gc.getDefaultTransform();
-        double scaleX = transform.getScaleX(); // Horizontal scale
-        double scaleY = transform.getScaleY(); // Vertical scale
-        this.monitorHeight = gd.getDisplayMode().getHeight();
-        this.monitorWidth = gd.getDisplayMode().getWidth();
+
     }
 
-    public void init(int widthImage, int heightImage) {
+    public void init() {
         GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         GraphicsConfiguration gc = gd.getDefaultConfiguration();
         AffineTransform transform = gc.getDefaultTransform();
         double scaleX = transform.getScaleX(); // Horizontal scale
         double scaleY = transform.getScaleY(); // Vertical scale
-
-        System.out.println(monitorWidth + " dsdsc " + monitorHeight);
-        scaledWidth = GlobalSettings.getResolution().getWidth() * widthImage / monitorWidth;
-        scaledHeight = GlobalSettings.getResolution().getHeight() * heightImage / monitorHeight;
-        scale = Math.min((double) scaledWidth / widthImage, (double) scaledHeight / heightImage);
-        resultWidth = (int) (widthImage * scale);
-        resultHeight = (int) (heightImage * scale);
+        scaledWidth = (int) (GlobalSettings.getResolution().getWidth() /scaleX);
+        scaledHeight = (int) (GlobalSettings.getResolution().getHeight() / scaleY);
+        resultWidth = (int) (scaledWidth);
+        resultHeight = (int) (scaledHeight);
         resultImage = new BufferedImage(resultWidth, resultHeight, BufferedImage.TYPE_INT_RGB);
         g2d = resultImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);

@@ -21,12 +21,12 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
     public void getAndSendScreenshot() {
 //        BufferedImage screenshot = bufferedImageScreenCaptureService.getScreenImage();
         BufferedImage screenshot = BenchmarkMethod.benchmarking(bufferedImageScreenCaptureService::getScreenImage);
-//        Drawer.setImage(scalingImage(screenshot));
-        sendSnapshot(screenshot);
+        Drawer.setImage(scalingImage(screenshot));
+//        sendSnapshot(screenshot);
     }
 
     private BufferedImage scalingImage(BufferedImage bufferedImage) {
-        imageScaleHelper.init(bufferedImage.getWidth(), bufferedImage.getHeight());
+        imageScaleHelper.init();
         return imageScaleHelper.scaleImage(bufferedImage);
     }
 
