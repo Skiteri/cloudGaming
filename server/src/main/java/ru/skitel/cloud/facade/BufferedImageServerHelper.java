@@ -19,7 +19,7 @@ public class BufferedImageServerHelper implements ServerHelper<BufferedImage> {
     }
 
     public BufferedImage receiveScreen() {
-        ImageCollectorService<BufferedImage> collectorService = new BufferedImageCollectorServiceImpl();
+        BufferedImageCollectorServiceImpl collectorService = new BufferedImageCollectorServiceImpl();
         return collectorService.collect();
     }
 

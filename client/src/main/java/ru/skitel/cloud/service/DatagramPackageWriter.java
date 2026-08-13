@@ -27,13 +27,13 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
     }
 
     private void sendLength(int dataLength) {
-        byte[] bytes = new byte[]{
+        byte[] bytes = new byte[] {
                 (byte) (dataLength >>> 24),
                 (byte) (dataLength >>> 16),
                 (byte) (dataLength >>> 8),
                 (byte) dataLength
         };
         DatagramPacket datagramPacket = new DatagramPacket(bytes, 0, bytes.length);
-        datagramSender.send(datagramPacket);
+        datagramSender.sendWithTimeout(datagramPacket);
     }
 }

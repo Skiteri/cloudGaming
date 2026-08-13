@@ -8,7 +8,6 @@ import ru.skitel.cloud.service.BufferedImageScreenCaptureServiceImpl;
 import ru.skitel.cloud.utils.BenchmarkMethod;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 

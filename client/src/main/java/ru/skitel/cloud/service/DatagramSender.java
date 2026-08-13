@@ -9,11 +9,13 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatagramSender extends ConnectionStarter implements PackageSender<DatagramPacket> {
 
     @Getter
     private DatagramSocket datagramSocket;
+    private AtomicInteger packetSent = new AtomicInteger(0);
 
     public DatagramSender() {
         start();
@@ -23,11 +25,14 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
     public void send(DatagramPacket datagramPacket) {
         try {
             datagramSocket.send(datagramPacket);
+            Thread.sleep(300);
+            System.out.println(packetSent.incrementAndGet());
         } catch (Exception _) {
         }
+
     }
 
-    public void sendWithoutTimeout(DatagramPacket datagramPacket) {
+    public void sendWithTimeout(DatagramPacket datagramPacket) {
         try {
             datagramSocket.send(datagramPacket);
         } catch (IOException e) {

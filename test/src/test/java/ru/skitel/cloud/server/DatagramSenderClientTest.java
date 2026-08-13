@@ -32,7 +32,7 @@ public class DatagramSenderClientTest {
             byte[] gotImage = future.get();
             executorService.shutdownNow();
             Assertions.assertArrayEquals(convert, gotImage);
-        } catch (ExecutionException | InterruptedException | IOException e) {
+        } catch (ExecutionException | InterruptedException e) {
             Assertions.fail(e.getCause() + " " + e.getMessage());
         }
     }

@@ -24,13 +24,17 @@ public class ImageScaleHelper {
         AffineTransform transform = gc.getDefaultTransform();
         double scaleX = transform.getScaleX(); // Horizontal scale
         double scaleY = transform.getScaleY(); // Vertical scale
-        int tempH = gd.getDisplayMode().getHeight();
-        int tempW = gd.getDisplayMode().getWidth();
-        this.monitorHeight = (int) Math.round(tempH * scaleY);
-        this.monitorWidth = (int) Math.round(tempW * scaleX);
+        this.monitorHeight = gd.getDisplayMode().getHeight();
+        this.monitorWidth = gd.getDisplayMode().getWidth();
     }
 
     public void init(int widthImage, int heightImage) {
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        AffineTransform transform = gc.getDefaultTransform();
+        double scaleX = transform.getScaleX(); // Horizontal scale
+        double scaleY = transform.getScaleY(); // Vertical scale
+
         System.out.println(monitorWidth + " dsdsc " + monitorHeight);
         scaledWidth = GlobalSettings.getResolution().getWidth() * widthImage / monitorWidth;
         scaledHeight = GlobalSettings.getResolution().getHeight() * heightImage / monitorHeight;
