@@ -34,6 +34,6 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
                 (byte) dataLength
         };
         DatagramPacket datagramPacket = new DatagramPacket(bytes, 0, bytes.length);
-        datagramSender.sendWithTimeout(datagramPacket);
+        datagramSender.sendWithoutTimeout(datagramPacket);
     }
 }

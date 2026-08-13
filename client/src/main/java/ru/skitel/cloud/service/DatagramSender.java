@@ -5,7 +5,6 @@ import ru.skitel.cloud.InetSocketAddressSingleton;
 import ru.skitel.cloud.connection.ConnectionStarter;
 import ru.skitel.cloud.service.api.PackageSender;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -25,17 +24,17 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
     public void send(DatagramPacket datagramPacket) {
         try {
             datagramSocket.send(datagramPacket);
-            Thread.sleep(300);
+            Thread.sleep(1);
             System.out.println(packetSent.incrementAndGet());
         } catch (Exception _) {
         }
 
     }
 
-    public void sendWithTimeout(DatagramPacket datagramPacket) {
+    public void sendWithoutTimeout(DatagramPacket datagramPacket) {
         try {
             datagramSocket.send(datagramPacket);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

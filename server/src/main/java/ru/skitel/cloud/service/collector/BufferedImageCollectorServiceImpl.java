@@ -35,7 +35,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
             System.arraycopy(data, 0, result, i * data.length, length);
         }
         System.out.println(packetGot.get());
-        return scalingImage(convert(result));
+        return imageScaleHelper.scaleImage(convert(result));
     }
 
     public BufferedImage collectWithNumber() {
@@ -52,11 +52,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
             System.arraycopy(data, 1, result, i * data.length, length - 1);
         }
         System.out.println(packetGot.get());
-        return scalingImage(convert(result));
+        return imageScaleHelper.scaleImage(convert(result));
     }
 
-    private BufferedImage scalingImage(BufferedImage bufferedImage) {
-        imageScaleHelper.init(bufferedImage.getWidth(), bufferedImage.getHeight());
-        return imageScaleHelper.scaleImage(bufferedImage);
-    }
 }
