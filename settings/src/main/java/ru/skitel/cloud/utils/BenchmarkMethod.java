@@ -1,5 +1,6 @@
 package ru.skitel.cloud.utils;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 public class BenchmarkMethod {

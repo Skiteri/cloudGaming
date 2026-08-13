@@ -11,13 +11,13 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 public class ClientHelperTest extends ClientHelper<BufferedImage> {
 
     @Override
-    public void getAndSendScreenshot() throws IOException {
+    public void getAndSendScreenshot() {
         BufferedImage bufferedImage = ImageUtil.create3by3();
         sendSnapshot(bufferedImage);
     }
 
     @Override
-    public void sendSnapshot(BufferedImage snapshot) throws IOException {
+    public void sendSnapshot(BufferedImage snapshot) {
         byte[] picture = convert(snapshot);
         getChannel().write(picture);
     }

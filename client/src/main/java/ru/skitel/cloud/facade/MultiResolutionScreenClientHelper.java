@@ -17,7 +17,7 @@ public class MultiResolutionScreenClientHelper extends ClientHelper<MultiResolut
     private final PackageWriter datagramPackageWriter = new DatagramPackageWriter();
 
     @Override
-    public void getAndSendScreenshot() throws IOException {
+    public void getAndSendScreenshot() {
         MultiResolutionImage screenshot = bufferedImageScreenCaptureService.getScreenImage();
         sendSnapshot(screenshot);
     }

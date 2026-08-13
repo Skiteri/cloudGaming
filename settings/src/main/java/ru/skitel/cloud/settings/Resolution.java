@@ -5,10 +5,10 @@ import lombok.Getter;
 @Getter
 public enum Resolution implements SettingSingleton {
 
-    RESOLUTION_4k(3840, 2160),
+    RESOLUTION_4K(3840, 2160),
     RESOLUTION_2K(2560, 1440),
     RESOLUTION_FULL_HD(1920, 1080),
-    RESOLUTION_ANY(21, 400);
+    RESOLUTION_CUSTOM(2000, 1000);
 
     private final int height;
     private final int width;

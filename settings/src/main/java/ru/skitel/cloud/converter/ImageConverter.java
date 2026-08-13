@@ -10,6 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.util.LinkedList;
 
 public final class ImageConverter {
 
@@ -35,11 +37,35 @@ public final class ImageConverter {
 //    }
 
     public static byte[] convert(BufferedImage screenshot) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             ImageIO.write(screenshot, "jpg", baos);
             return baos.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static byte[] numeratedImage(BufferedImage screenshot) {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(screenshot, "jpg", baos);
+            writeNumber(baos.size(), baos);
+
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void writeNumber(int size, ByteArrayOutputStream byteArrayOutputStream) {
+        int packetLength = GlobalSettings.getPacketSettings().getPacketLength();
+        int offset = 0;
+
+        int iterations = (int) Math.ceil((double) size / GlobalSettings.getPacketSettings().getPacketLength()) - 1;
+
+        for (int i = 0; i <= iterations; i++) {
+            byte[] is = {(byte) i};
+            byteArrayOutputStream.write(is, offset, 1);
+            offset += packetLength;
         }
     }
 

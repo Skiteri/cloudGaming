@@ -19,11 +19,7 @@ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
     @Override
     public void sendSnapshot(byte[] snapshot) {
-        try {
-            getChannel().write(snapshot);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        getChannel().write(snapshot);
     }
 
 
