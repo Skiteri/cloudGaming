@@ -3,12 +3,12 @@ package ru.skitel.cloud;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class RobotScreenCapture {
+public class RobotBufferedImageCapturerImpl implements Capturer<BufferedImage> {
 
     private final Robot robot;
     private final Rectangle bounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().getBounds();
 
-    public RobotScreenCapture() {
+    public RobotBufferedImageCapturerImpl() {
         try  {
             robot = new Robot();
         } catch (Exception e) {
@@ -16,7 +16,7 @@ public class RobotScreenCapture {
         }
     }
 
-    public BufferedImage getScreenshot() {
+    public BufferedImage capture() {
         return robot.createScreenCapture(bounds);
     }
 }

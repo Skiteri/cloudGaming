@@ -3,14 +3,13 @@ package ru.skitel.cloud;
 import fastrobot.FastRobot;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
-public class FastRobotScreenCapture {
+public class FastRobotIntArrayCapturerImpl implements Capturer<int[]> {
 
     private final FastRobot robot;
     private final Rectangle bounds ;
 
-    public FastRobotScreenCapture() {
+    public FastRobotIntArrayCapturerImpl() {
         try {
             GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             int tempH = gd.getDisplayMode().getHeight();
@@ -22,7 +21,9 @@ public class FastRobotScreenCapture {
         }
     }
 
-    public BufferedImage getScreenshot() {
-        return robot.createScreenCapture(bounds);
+    @Override
+    public int[] capture() {
+        return robot.getScreenPixels(0, 0, bounds.width, bounds.height);
     }
+
 }

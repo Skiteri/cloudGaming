@@ -7,9 +7,9 @@ public final class GlobalSettings {
     private GlobalSettings() {
     }
 
-    private static final Resolution RESOLUTION = Resolution.RESOLUTION_FULL_HD;
+    private static final Resolution RESOLUTION = Resolution.RESOLUTION_3K;
     private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
-    private static final Mode CLIENT_MODE = Mode.BUFFERED_IMAGE_MODE;
+    private static final Mode CLIENT_MODE = Mode.INT_ARRAY_SCREEN_MODE;
     private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
     private static final PacketSettings PACKET_SETTINGS = new PacketSettings(65507);
     private static final TypeMode TYPE_MODE = TypeMode.DATAGRAM_PACKET;

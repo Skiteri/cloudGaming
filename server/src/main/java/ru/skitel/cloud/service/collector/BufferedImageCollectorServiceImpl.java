@@ -1,7 +1,7 @@
 package ru.skitel.cloud.service.collector;
 
 import ru.skitel.cloud.GlobalSettings;
-import ru.skitel.cloud.ImageScaleHelper;
+import ru.skitel.cloud.utils.ImageResizer;
 import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
 import ru.skitel.cloud.api.ReceiverService;
@@ -15,7 +15,7 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 public class BufferedImageCollectorServiceImpl implements ImageCollectorService<BufferedImage> {
 
     private final ReceiverService<byte[]> serverConnection;
-    private final ImageScaleHelper imageScaleHelper = new ImageScaleHelper();
+    private final ImageResizer imageResizer = new ImageResizer();
     private final AtomicInteger packetGot = new AtomicInteger(0);
 
     public BufferedImageCollectorServiceImpl() {
@@ -35,7 +35,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
             System.arraycopy(data, 0, result, i * data.length, length);
         }
         System.out.println(packetGot.get());
-        return imageScaleHelper.scaleImage(convert(result));
+        return imageResizer.resize(convert(result));
     }
 
     public BufferedImage collectWithNumber() {
@@ -52,7 +52,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
             System.arraycopy(data, 1, result, i * data.length, length - 1);
         }
         System.out.println(packetGot.get());
-        return imageScaleHelper.scaleImage(convert(result));
+        return imageResizer.resize(convert(result));
     }
 
 }

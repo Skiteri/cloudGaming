@@ -1,7 +1,7 @@
 package ru.skitel.cloud.service;
 
-public interface ScreenCaptureService {
+public interface ScreenCaptureService<T> {
 
-    Object getScreenImage();
+    T getScreenImage();
 
 }

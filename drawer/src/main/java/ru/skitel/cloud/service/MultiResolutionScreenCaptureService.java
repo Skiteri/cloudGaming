@@ -7,7 +7,7 @@ import java.awt.image.MultiResolutionImage;
 
 import static ru.skitel.cloud.adapter.ResolutionToDimAdapter.adapt;
 
-public class MultiResolutionScreenCaptureServiceImpl implements ScreenCaptureService {
+public class MultiResolutionScreenCaptureService implements ScreenCaptureService {
 
     @Override
     public MultiResolutionImage getScreenImage() {

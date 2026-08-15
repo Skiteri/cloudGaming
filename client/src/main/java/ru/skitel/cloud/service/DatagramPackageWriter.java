@@ -14,16 +14,18 @@ public class DatagramPackageWriter implements PackageWriter<byte[]> {
         int packetLength = GlobalSettings.getPacketSettings().getPacketLength();
         int dataLength = data.length;
         int offset = 0;
-        final DatagramPacket datagramPacket = new DatagramPacket(data, offset, dataLength - offset);
+        final DatagramPacket datagramPacket = new DatagramPacket(data, offset, 0);
 
         sendLength(dataLength);
-        while (offset + packetLength < dataLength) {
-            datagramPacket.setData(data, offset, packetLength);
-            datagramSender.send(datagramPacket);
-            offset += packetLength;
+        for (;offset + packetLength < dataLength; offset += packetLength) {
+            setAndSend(datagramPacket, data, offset, packetLength);
         }
-        datagramPacket.setLength(dataLength - offset);
-        datagramSender.send(datagramPacket);
+        setAndSend(datagramPacket, data, offset, dataLength - offset);
+    }
+
+    private void setAndSend(DatagramPacket datagram, byte[] bytes, int offset, int dataLength) {
+        datagram.setData(bytes, offset, dataLength);
+        datagramSender.send(datagram);
     }
 
     private void sendLength(int dataLength) {

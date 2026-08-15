@@ -1,34 +1,36 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.utils;
+
+import ru.skitel.cloud.GlobalSettings;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class ImageScaleHelper {
+public class ImageResizer {
 
     private final int resultWidth;
     private final int resultHeight;
-    private final BufferedImage resultImage;
+    private final BufferedImage resultScaledImage;
     private final Graphics2D g2d;
 
-    public ImageScaleHelper() {
-        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-        GraphicsConfiguration gc = gd.getDefaultConfiguration();
-        AffineTransform transform = gc.getDefaultTransform();
-        double scaleX = transform.getScaleX(); // Horizontal scale
-        double scaleY = transform.getScaleY(); // Vertical scale
-        resultWidth = (int) (GlobalSettings.getResolution().getWidth() /scaleX);
-        resultHeight = (int) (GlobalSettings.getResolution().getHeight() / scaleY);
-        resultImage = new BufferedImage(resultWidth, resultHeight, BufferedImage.TYPE_INT_RGB);
-        g2d = resultImage.createGraphics();
+    public ImageResizer() {
+        AffineTransform transform = GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice()
+                .getDefaultConfiguration()
+                .getDefaultTransform();
+        resultWidth = (int) (GlobalSettings.getResolution().getWidth() / transform.getScaleX());
+        resultHeight = (int) (GlobalSettings.getResolution().getHeight() / transform.getScaleY());
+        resultScaledImage = new BufferedImage(resultWidth, resultHeight, BufferedImage.TYPE_INT_RGB);
+
+        g2d = resultScaledImage.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
     }
 
-    public BufferedImage scaleImage(BufferedImage screenshot) {
+    public BufferedImage resize(BufferedImage screenshot) {
         g2d.drawImage(screenshot, 0, 0, resultWidth, resultHeight, null);
 //        printGranisiez(g2d, resultImage.getWidth(), resultImage.getHeight());
-        return resultImage;
+        return resultScaledImage;
     }
 
     private static void printGranisiez(Graphics2D g2d, int newW, int newH) {

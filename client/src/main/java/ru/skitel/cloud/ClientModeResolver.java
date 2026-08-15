@@ -1,11 +1,8 @@
 package ru.skitel.cloud;
 
 import lombok.Getter;
-import ru.skitel.cloud.facade.MultiResolutionScreenClientHelper;
+import ru.skitel.cloud.facade.*;
 import ru.skitel.cloud.settings.Mode;
-import ru.skitel.cloud.facade.BufferedImageClientHelper;
-import ru.skitel.cloud.facade.BytesArrayClientHelper;
-import ru.skitel.cloud.facade.ClientHelper;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -13,7 +10,8 @@ public enum ClientModeResolver {
 
     BUFFERED_IMAGE_HELPER(Mode.BUFFERED_IMAGE_MODE, BufferedImageClientHelper.class),
     BYTE_ARRAY_HELPER(Mode.BYTE_ARRAY_MODE, BytesArrayClientHelper.class),
-    MULTI_RESOLUTION_SCREEN_HELPER(Mode.MULTI_RESOLUTION_SCREEN_MODE, MultiResolutionScreenClientHelper.class);
+    MULTI_RESOLUTION_SCREEN_HELPER(Mode.MULTI_RESOLUTION_SCREEN_MODE, MultiResolutionScreenClientHelper.class),
+    INT_ARRAY_SCREEN_HELPER(Mode.INT_ARRAY_SCREEN_MODE, IntArrayClientHelper.class);
 
     @Getter
     private static ClientHelper<?> clientHelper;

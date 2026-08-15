@@ -4,6 +4,7 @@ public enum Mode implements SettingSingleton {
 
     BUFFERED_IMAGE_MODE,
     BYTE_ARRAY_MODE,
-    MULTI_RESOLUTION_SCREEN_MODE
+    MULTI_RESOLUTION_SCREEN_MODE,
+    INT_ARRAY_SCREEN_MODE
 
 }

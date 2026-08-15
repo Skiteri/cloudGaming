@@ -1,6 +1,6 @@
 package ru.skitel.cloud.service;
 
-public class ByteArrayScreenCaptureServiceImpl implements ScreenCaptureService {
+public class ByteArrayScreenCaptureService implements ScreenCaptureService<byte[]> {
 
     @Override
     public byte[] getScreenImage() {

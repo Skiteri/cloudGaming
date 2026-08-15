@@ -1,13 +1,11 @@
 package ru.skitel.cloud.facade;
 
-import ru.skitel.cloud.service.ByteArrayScreenCaptureServiceImpl;
-
-import java.io.IOException;
+import ru.skitel.cloud.service.ByteArrayScreenCaptureService;
 
 
 public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
-    ByteArrayScreenCaptureServiceImpl byteArrayScreenCaptureService = new ByteArrayScreenCaptureServiceImpl();
+    ByteArrayScreenCaptureService byteArrayScreenCaptureService = new ByteArrayScreenCaptureService();
 
     @Override
     public void getAndSendScreenshot() {
