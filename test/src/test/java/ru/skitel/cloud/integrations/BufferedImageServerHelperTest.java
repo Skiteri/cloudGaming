@@ -18,7 +18,7 @@ public class BufferedImageServerHelperTest implements ServerHelper<BufferedImage
 
     @Override
     public void drawScreen(BufferedImage bufferImage) {
-        Drawer.setImage(bufferImage);
+        Drawer.draw(bufferImage);
     }
 
     @Override

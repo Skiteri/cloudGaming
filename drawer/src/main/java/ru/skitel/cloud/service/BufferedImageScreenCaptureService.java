@@ -1,8 +1,7 @@
 package ru.skitel.cloud.service;
 
-import ru.skitel.cloud.Capturer;
-import ru.skitel.cloud.FastRobotBufferedImageCapturerImpl;
-import ru.skitel.cloud.RobotBufferedImageCapturerImpl;
+import ru.skitel.cloud.util.service.Capturer;
+import ru.skitel.cloud.util.RobotBufferedImageCapturerImpl;
 
 import java.awt.image.BufferedImage;
 

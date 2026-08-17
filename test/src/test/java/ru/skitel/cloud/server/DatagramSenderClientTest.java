@@ -3,11 +3,9 @@ package ru.skitel.cloud.server;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.skitel.cloud.facade.ByteArrayServerHelper;
-import ru.skitel.cloud.integrations.BufferedImageServerHelperTest;
 import ru.skitel.cloud.integrations.IntegrationHelper;
 
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.concurrent.*;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;

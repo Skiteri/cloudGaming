@@ -17,7 +17,7 @@ public class ByteArrayServerHelper implements ServerHelper<byte[]> {
 
     @Override
     public void drawScreen(byte[] byteImage) {
-        Drawer.setImage(convert(byteImage));
+        Drawer.draw(convert(byteImage));
     }
 
     @Override

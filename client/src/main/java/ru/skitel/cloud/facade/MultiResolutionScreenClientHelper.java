@@ -1,8 +1,8 @@
 package ru.skitel.cloud.facade;
 
-import ru.skitel.cloud.service.DatagramPackageWriter;
+import ru.skitel.cloud.service.DatagramChunkedTransferService;
 import ru.skitel.cloud.service.MultiResolutionScreenCaptureService;
-import ru.skitel.cloud.service.api.PackageWriter;
+import ru.skitel.cloud.service.api.TransferService;
 
 import java.awt.image.MultiResolutionImage;
 
@@ -11,7 +11,7 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 public class MultiResolutionScreenClientHelper extends ClientHelper<MultiResolutionImage>{
 
     private final MultiResolutionScreenCaptureService bufferedImageScreenCaptureService = new MultiResolutionScreenCaptureService();
-    private final PackageWriter datagramPackageWriter = new DatagramPackageWriter();
+    private final TransferService datagramTransferService = new DatagramChunkedTransferService();
 
     @Override
     public void getAndSendScreenshot() {

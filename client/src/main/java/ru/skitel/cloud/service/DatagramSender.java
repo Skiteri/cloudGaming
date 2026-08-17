@@ -1,10 +1,11 @@
 package ru.skitel.cloud.service;
 
 import lombok.Getter;
-import ru.skitel.cloud.InetSocketAddressSingleton;
+import ru.skitel.cloud.holder.InetSocketAddressHolder;
 import ru.skitel.cloud.connection.ConnectionStarter;
 import ru.skitel.cloud.service.api.PackageSender;
 
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -14,36 +15,28 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
 
     @Getter
     private DatagramSocket datagramSocket;
-    private AtomicInteger packetSent = new AtomicInteger(0);
+    private final AtomicInteger packetSent = new AtomicInteger(0);
 
     public DatagramSender() {
         start();
     }
 
     @Override
-    public void send(DatagramPacket datagramPacket) {
-        try {
-            datagramSocket.send(datagramPacket);
-            Thread.sleep(1);
-            System.out.println(packetSent.incrementAndGet());
-        } catch (Exception _) {
-        }
-
+    public void send(DatagramPacket datagramPacket) throws IOException {
+        datagramSocket.send(datagramPacket);
+        System.out.println(packetSent.incrementAndGet());
     }
 
-    public void sendWithoutTimeout(DatagramPacket datagramPacket) {
-        try {
-            datagramSocket.send(datagramPacket);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public void sendWithTimeout(DatagramPacket datagramPacket) throws InterruptedException, IOException {
+        datagramSocket.send(datagramPacket);
+        Thread.sleep(1);
     }
 
     @Override
     public void openConnection() {
         try {
             datagramSocket = new DatagramSocket();
-            datagramSocket.connect(InetSocketAddressSingleton.getInstance());
+            datagramSocket.connect(InetSocketAddressHolder.getInstance());
         } catch (SocketException e) {
             throw new RuntimeException(e);
         }

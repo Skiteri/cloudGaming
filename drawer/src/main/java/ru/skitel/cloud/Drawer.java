@@ -19,13 +19,13 @@ public class Drawer {
         frame.pack();
     }
 
-    public static void setImage(BufferedImage bufferImage) {
+    public static void draw(BufferedImage bufferImage) {
         if (dimension == null) {
             dimension = new Dimension(bufferImage.getWidth(), bufferImage.getHeight());
             panel.setPreferredSize(dimension);
         }
         panel.getGraphics().drawImage(bufferImage,0,0, bufferImage.getWidth(), bufferImage.getHeight(), null);
-//        panel.imageUpdate(bufferImage,0,0, 0, bufferImage.getWidth(), bufferImage.getHeight());
+        panel.getGraphics().dispose();
         frame.pack();
     }
 

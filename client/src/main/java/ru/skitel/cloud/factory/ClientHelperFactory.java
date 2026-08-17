@@ -1,12 +1,13 @@
-package ru.skitel.cloud;
+package ru.skitel.cloud.factory;
 
 import lombok.Getter;
+import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.facade.*;
 import ru.skitel.cloud.settings.Mode;
 
 import java.lang.reflect.InvocationTargetException;
 
-public enum ClientModeResolver {
+public enum ClientHelperFactory {
 
     BUFFERED_IMAGE_HELPER(Mode.BUFFERED_IMAGE_MODE, BufferedImageClientHelper.class),
     BYTE_ARRAY_HELPER(Mode.BYTE_ARRAY_MODE, BytesArrayClientHelper.class),
@@ -16,7 +17,7 @@ public enum ClientModeResolver {
     @Getter
     private static ClientHelper<?> clientHelper;
 
-    ClientModeResolver(Mode mode, Class<? extends ClientHelper<?>> clazz) {
+    ClientHelperFactory(Mode mode, Class<? extends ClientHelper<?>> clazz) {
         try {
             if (GlobalSettings.getClientMode() == mode) {
                 setClientHelper(clazz.getDeclaredConstructor().newInstance());

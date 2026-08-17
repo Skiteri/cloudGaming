@@ -1,17 +1,18 @@
 package ru.skitel.cloud.connection;
 
-import ru.skitel.cloud.InetSocketAddressSingleton;
-import ru.skitel.cloud.service.api.PackageWriter;
+import ru.skitel.cloud.holder.InetSocketAddressHolder;
+import ru.skitel.cloud.service.api.TransferService;
 
 import java.io.IOException;
 import java.net.Socket;
 
-public class SocketConnection extends ConnectionStarter implements PackageWriter<byte[]> {
+@Deprecated
+public class SocketConnection extends ConnectionStarter implements TransferService<byte[]> {
 
     private Socket socket;
 
     @Override
-    public void write(byte[] bytes) {
+    public void transfer(byte[] bytes) {
         try {
             socket.getOutputStream().write(bytes);
             socket.getOutputStream().flush();
@@ -23,7 +24,7 @@ public class SocketConnection extends ConnectionStarter implements PackageWriter
     @Override
     public void openConnection() {
         try {
-            socket = new Socket(InetSocketAddressSingleton.getInstance().getHostName(), InetSocketAddressSingleton.getInstance().getPort());
+            socket = new Socket(InetSocketAddressHolder.getInstance().getHostName(), InetSocketAddressHolder.getInstance().getPort());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
