@@ -1,0 +1,935 @@
+Subject: [PATCH] сделал быструю конвертацию изображения с интерполяцией сразу под экран
+---
+Index: settings/src/main/java/ru/skitel/cloud/utils/BenchmarkMethod.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/settings/src/main/java/ru/skitel/cloud/utils/BenchmarkMethod.java b/settings/src/main/java/ru/skitel/cloud/utils/BenchmarkMethod.java
+--- a/settings/src/main/java/ru/skitel/cloud/utils/BenchmarkMethod.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/settings/src/main/java/ru/skitel/cloud/utils/BenchmarkMethod.java	(date 1787207719074)
+@@ -7,10 +7,10 @@
+ 
+     @FunctionalInterface
+     public interface Action {
+-        void action(); // Название метода может быть любым
++        void action() throws IOException, InterruptedException; // Название метода может быть любым
+     }
+ 
+-    public static void benchmarking(Action action) {
++    public static void benchmarking(Action action) throws IOException, InterruptedException {
+         long l = System.currentTimeMillis();
+         action.action();
+         System.out.println("Cистема выполнила действие за " + (System.currentTimeMillis() - l));
+Index: server/src/main/java/ru/skitel/cloud/ReceiverHolder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/ReceiverHolder.java b/server/src/main/java/ru/skitel/cloud/ReceiverHolder.java
+--- a/server/src/main/java/ru/skitel/cloud/ReceiverHolder.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/ReceiverHolder.java	(date 1786955730236)
+@@ -1,24 +1,24 @@
+ package ru.skitel.cloud;
+ 
+ import lombok.Getter;
+-import ru.skitel.cloud.api.ReceiverService;
+-import ru.skitel.cloud.service.datagram.ByteArrayReceiverService;
++import ru.skitel.cloud.api.Receiver;
++import ru.skitel.cloud.service.datagram.ByteArrayReceiver;
+ 
+ @Getter
+ public enum ReceiverHolder {
+     INSTANCE;
+ 
+-    private final ReceiverService<byte[]> receiverService = ReceiverFactory.create();
++    private final Receiver<byte[]> receiver = ReceiverFactory.create();
+ 
+     @SuppressWarnings(value = "unchecked")
+-    public <T> ReceiverService<T> getInstance() {
+-        return (ReceiverService<T>) receiverService;
++    public <T> Receiver<T> getInstance() {
++        return (Receiver<T>) receiver;
+     }
+ 
+     public static class ReceiverFactory {
+-        private static <T> ReceiverService<T> create() {
++        private static <T> Receiver<T> create() {
+             return switch (GlobalSettings.getTypeMode()) {
+-                case DATAGRAM_PACKET -> new ByteArrayReceiverService<>();
++                case DATAGRAM_PACKET -> new ByteArrayReceiver<>();
+                 default -> throw new RuntimeException();
+             };
+         }
+Index: drawer/src/main/resources/capture.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/drawer/src/main/resources/capture.cpp b/drawer/src/main/resources/capture.cpp
+new file mode 100644
+--- /dev/null	(date 1787060439954)
++++ b/drawer/src/main/resources/capture.cpp	(date 1787060439954)
+@@ -0,0 +1,155 @@
++// ConsoleApplication1.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
++//
++
++#include <d3d11.h>
++#include <dxgi1_2.h>
++#include <iostream>
++#include <chrono>
++#include <jni.h>
++#include "NativeScreenCaptureService.h"
++
++
++using namespace std;
++
++#pragma comment(lib, "d3d11.lib")
++#pragma comment(lib, "dxgi.lib")
++
++
++JNIEXPORT jbyteArray JNICALL Java_NativeScreenCaptureService_capture(JNIEnv* env, jobject obj, jint a, jint b) {
++    HRESULT hr;
++    jbyteArray result = nullptr;
++
++    // 1. Создаем устройство D3D11
++    ID3D11Device* d3dDevice = nullptr;
++    ID3D11DeviceContext* d3dContext = nullptr;
++    D3D_FEATURE_LEVEL featureLevel;
++
++    hr = D3D11CreateDevice(
++        nullptr,
++        D3D_DRIVER_TYPE_HARDWARE,
++        nullptr,
++        0,
++        nullptr,
++        0,
++        D3D11_SDK_VERSION,
++        &d3dDevice,
++        &featureLevel,
++        &d3dContext
++    );
++
++    if (FAILED(hr)) {
++        return nullptr;
++    }
++
++    // 2. Получаем DXGI интерфейсы
++    IDXGIDevice* dxgiDevice = nullptr;
++    d3dDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
++
++    IDXGIAdapter* dxgiAdapter = nullptr;
++    dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&dxgiAdapter);
++
++    IDXGIOutput* dxgiOutput = nullptr;
++    dxgiAdapter->EnumOutputs(0, &dxgiOutput);
++
++    IDXGIOutput1* dxgiOutput1 = nullptr;
++    dxgiOutput->QueryInterface(__uuidof(IDXGIOutput1), (void**)&dxgiOutput1);
++
++    // 3. Активируем Desktop Duplication
++    IDXGIOutputDuplication* deskDupl = nullptr;
++    hr = dxgiOutput1->DuplicateOutput(d3dDevice, &deskDupl);
++
++    if (FAILED(hr)) {
++        // Очистка при ошибке
++        dxgiOutput1->Release();
++        dxgiOutput->Release();
++        dxgiAdapter->Release();
++        dxgiDevice->Release();
++        d3dContext->Release();
++        d3dDevice->Release();
++        return nullptr;
++    }
++
++    // 4. Захватываем кадр
++    DXGI_OUTDUPL_FRAME_INFO frameInfo;
++    IDXGIResource* desktopResource = nullptr;
++
++    hr = deskDupl->AcquireNextFrame(500, &frameInfo, &desktopResource);
++
++    if (SUCCEEDED(hr)) {
++        // Получаем текстуру
++        ID3D11Texture2D* gpuTexture = nullptr;
++        desktopResource->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&gpuTexture);
++
++        // Получаем описание текстуры
++        D3D11_TEXTURE2D_DESC desc;
++        gpuTexture->GetDesc(&desc);
++
++        // Создаем текстуру для копирования в CPU
++        D3D11_TEXTURE2D_DESC stagingDesc = desc;
++        stagingDesc.Usage = D3D11_USAGE_STAGING;
++        stagingDesc.BindFlags = 0;
++        stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
++        stagingDesc.MiscFlags = 0;
++
++        ID3D11Texture2D* stagingTexture = nullptr;
++        hr = d3dDevice->CreateTexture2D(&stagingDesc, nullptr, &stagingTexture);
++
++        if (SUCCEEDED(hr)) {
++            // Копируем из GPU текстуры в staging текстуру
++            d3dContext->CopyResource(stagingTexture, gpuTexture);
++
++            // Получаем доступ к данным на CPU
++            D3D11_MAPPED_SUBRESOURCE mapped;
++            hr = d3dContext->Map(stagingTexture, 0, D3D11_MAP_READ, 0, &mapped);
++
++            if (SUCCEEDED(hr)) {
++                // Вычисляем размер данных
++                int width = desc.Width;
++                int height = desc.Height;
++                int bytesPerPixel = 4; // BGRA
++                int imageSize = width * height * bytesPerPixel;
++
++                // Создаем Java byte[]
++                result = env->NewByteArray(imageSize);
++
++                if (result != nullptr) {
++                    // Получаем указатель на Java массив
++                    jbyte* byteArray = env->GetByteArrayElements(result, nullptr);
++
++                    // Копируем данные из GPU в Java массив
++                    // mapped.pData содержит данные в формате BGRA
++                    // mapped.RowPitch - количество байтов в строке (может быть шире из-за выравнивания)
++
++                    for (int y = 0; y < height; y++) {
++                        const BYTE* srcRow = static_cast<const BYTE*>(mapped.pData) + y * mapped.RowPitch;
++                        jbyte* dstRow = byteArray + y * width * bytesPerPixel;
++                        memcpy(dstRow, srcRow, width * bytesPerPixel);
++                    }
++
++                    // Освобождаем Java массив
++                    env->ReleaseByteArrayElements(result, byteArray, 0);
++                }
++
++                d3dContext->Unmap(stagingTexture, 0);
++            }
++
++            stagingTexture->Release();
++        }
++
++        gpuTexture->Release();
++        desktopResource->Release();
++        deskDupl->ReleaseFrame();
++    }
++
++    // Очистка
++    deskDupl->Release();
++    dxgiOutput1->Release();
++    dxgiOutput->Release();
++    dxgiAdapter->Release();
++    dxgiDevice->Release();
++    d3dContext->Release();
++    d3dDevice->Release();
++
++    return result;
++}
++
+Index: settings/src/main/java/ru/skitel/cloud/utils/ImageEncoder.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/settings/src/main/java/ru/skitel/cloud/utils/ImageEncoder.java b/settings/src/main/java/ru/skitel/cloud/utils/ImageEncoder.java
+--- a/settings/src/main/java/ru/skitel/cloud/utils/ImageEncoder.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/settings/src/main/java/ru/skitel/cloud/utils/ImageEncoder.java	(date 1787207690263)
+@@ -2,6 +2,8 @@
+ 
+ import java.awt.image.BufferedImage;
+ import java.awt.image.ColorModel;
++import java.awt.image.DataBufferByte;
++import java.awt.image.DataBufferInt;
+ 
+ import static ru.skitel.cloud.MonitorSettings.*;
+ 
+@@ -11,11 +13,15 @@
+         return interpolate(screenshot, 2);
+     }
+ 
++    public BufferedImage encode(byte[] screenshot) {
++        return interpolate4bytePixel(screenshot, 2);
++    }
++
+     private BufferedImage interpolate(int[] screenshot, int interpolation) {
+         Object pixel = null;
+         for (int y = 0, posY = 0; y < DISPLAY_HEIGHT; y += interpolation, posY++) {
+             for (int x = 0, posX = 0; x < DISPLAY_WIDTH; x += interpolation, posX++) {
+-                pixel = ColorModel.getRGBdefault().getDataElements(screenshot[DISPLAY_WIDTH * y + x], pixel);
++                pixel = resultScaledImage.getColorModel().getDataElements(screenshot[DISPLAY_WIDTH * y + x], pixel);
+                 resultScaledImage.getRaster().setDataElements(posX, posY, pixel);
+             }
+         }
+@@ -23,4 +29,28 @@
+         return resultScaledImage;
+     }
+ 
++    private BufferedImage interpolate4bytePixel(byte[] screenshot, int interpolation) {
++        int mode = 4;
++        if (screenshot == null || screenshot.length == 0) {
++            System.out.println("❌ No data from native!");
++            return null;
++        }
++        int offset = 0;
++        int[] data = ((DataBufferInt) resultScaledImage.getRaster().getDataBuffer()).getData();
++        for (int j = 0; j < imageResultHeight; j++, offset += mode * DISPLAY_WIDTH) {
++            for (int i = 0; i < imageResultWidth; i++, offset += interpolation * mode) {
++                int resultPixel = j * imageResultWidth + i;
++                int b = screenshot[offset] & 0xFF;
++                int g = screenshot[offset + 1] & 0xFF;
++                int r = screenshot[offset + 2] & 0xFF;
++                int a = screenshot[offset + 3] & 0xFF;
++
++                data[resultPixel] = (a << 24) | (r << 16) | (g << 8) | b;
++            }
++        }
++        IMAGE_GRAPHICS.drawImage(resultScaledImage, 0, 0, imageResultWidth, imageResultHeight, null);
++        return resultScaledImage;
++    }
++
++
+ }
+Index: client/src/main/java/ru/skitel/cloud/ClientApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/client/src/main/java/ru/skitel/cloud/ClientApp.java b/client/src/main/java/ru/skitel/cloud/ClientApp.java
+--- a/client/src/main/java/ru/skitel/cloud/ClientApp.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/client/src/main/java/ru/skitel/cloud/ClientApp.java	(date 1787207834293)
+@@ -2,14 +2,46 @@
+ 
+ import ru.skitel.cloud.facade.ClientHelper;
+ import ru.skitel.cloud.factory.ClientHelperFactory;
++import ru.skitel.cloud.utils.BenchmarkMethod;
++
++import java.io.File;
++import java.io.IOException;
++import java.io.InputStream;
++import java.nio.file.Files;
++import java.nio.file.StandardCopyOption;
++
+ 
+ public class ClientApp implements Runnable {
+ 
+-    public static void main(String[] args){
++    private static void loadFromResources() throws Exception {
++        String dllName = "capture.dll";
++        String resourcePath = "/capture.dll";
++
++        // Создаем временную папку
++        File tempDir = new File(System.getProperty("java.io.tmpdir"), "native_libs");
++        tempDir.mkdirs();
++
++        File tempFile = new File(tempDir, dllName);
++
++        // Копируем DLL из resources
++        try (InputStream is = ClientApp.class.getResourceAsStream(resourcePath)) {
++            if (is == null) {
++                throw new RuntimeException("Resource not found: " + resourcePath);
++            }
++            Files.copy(is, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
++        }
++
++        // Загружаем DLL
++        System.load(tempFile.getAbsolutePath());
++        System.out.println("DLL loaded from temp: " + tempFile.getAbsolutePath());
++    }
++
++    public static void main(String[] args) throws Exception {
++        loadFromResources();
+         start();
+     }
+ 
+-    public static void start() {
++    public static void start() throws IOException, InterruptedException {
+         ClientHelper<?> clientHelper = ClientHelperFactory.getClientHelper();
+         int i = 0;
+         while (true) {
+@@ -20,7 +52,13 @@
+ 
+     @Override
+     public void run() {
+-        start();
++        try {
++            start();
++        } catch (IOException e) {
++            throw new RuntimeException(e);
++        } catch (InterruptedException e) {
++            throw new RuntimeException(e);
++        }
+     }
+ 
+ }
+Index: server/src/main/java/ru/skitel/cloud/service/IntArrayReceiver.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/service/IntArrayReceiver.java b/server/src/main/java/ru/skitel/cloud/service/IntArrayReceiver.java
+new file mode 100644
+--- /dev/null	(date 1786973025451)
++++ b/server/src/main/java/ru/skitel/cloud/service/IntArrayReceiver.java	(date 1786973025451)
+@@ -0,0 +1,26 @@
++package ru.skitel.cloud.service;
++
++import ru.skitel.cloud.DatagramInfo;
++import ru.skitel.cloud.api.Receiver;
++
++import java.net.SocketException;
++
++public class IntArrayReceiver implements Receiver<int[]> {
++
++    private final DatagramInfo datagramInfo;
++
++    public IntArrayReceiver() {
++        try {
++            this.datagramInfo = new DatagramInfo();
++        } catch (SocketException e) {
++            throw new RuntimeException(e);
++        }
++    }
++
++    @Override
++    public int[] getPack() {
++        datagramInfo.receive();
++        byte[] data = datagramInfo.getData();
++        return null;
++    }
++}
+Index: server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiverService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiverService.java b/server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiver.java
+rename from server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiverService.java
+rename to server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiver.java
+--- a/server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiverService.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/service/datagram/ByteArrayReceiver.java	(date 1786955844422)
+@@ -1,19 +1,15 @@
+ package ru.skitel.cloud.service.datagram;
+ 
+-import ru.skitel.cloud.GlobalSettings;
+-import ru.skitel.cloud.settings.PacketSettings;
+-import ru.skitel.cloud.api.ReceiverService;
++import ru.skitel.cloud.DatagramInfo;
++import ru.skitel.cloud.api.Receiver;
+ 
+-import java.io.IOException;
+-import java.net.DatagramPacket;
+-import java.net.DatagramSocket;
+ import java.net.SocketException;
+ 
+-public class ByteArrayReceiverService<T> implements ReceiverService<T> {
++public class ByteArrayReceiver<T> implements Receiver<T> {
+ 
+     private final DatagramInfo datagramInfo;
+ 
+-    public ByteArrayReceiverService() {
++    public ByteArrayReceiver() {
+         try {
+             this.datagramInfo = new DatagramInfo();
+         } catch (SocketException e) {
+@@ -27,28 +23,4 @@
+         return (T) datagramInfo.getData();
+     }
+ 
+-    private static class DatagramInfo {
+-
+-        private final DatagramPacket pack;
+-        private final DatagramSocket socket;
+-
+-        public DatagramInfo() throws SocketException {
+-            PacketSettings packetSettings = GlobalSettings.getPacketSettings();
+-            pack = new DatagramPacket(new byte[packetSettings.getPacketLength()], packetSettings.getPacketLength());
+-            socket = new DatagramSocket(GlobalSettings.getConnectionType().getPort());
+-        }
+-
+-        public void receive() {
+-            try {
+-                socket.receive(pack);
+-            } catch (IOException e) {
+-                throw new RuntimeException(e);
+-            }
+-        }
+-
+-        public byte[] getData() {
+-            return pack.getData();
+-        }
+-    }
+-
+ }
+Index: drawer/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/drawer/pom.xml b/drawer/pom.xml
+--- a/drawer/pom.xml	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/drawer/pom.xml	(date 1787063271620)
+@@ -17,7 +17,40 @@
+             <url>https://jitpack.io</url>
+         </repository>
+     </repositories>
++    <properties>
++        <java.home>${env.JAVA_HOME}</java.home>
++    </properties>
++    <build>
++        <resources>
++            <!-- Include native DLL in JAR -->
++            <resource>
++                <directory>build</directory>
++                <includes>
++                    <include>*.dll</include>
++                </includes>
++            </resource>
++            <!-- Standard resources -->
++            <resource>
++                <directory>src/main/resources</directory>
++            </resource>
++        </resources>
+ 
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-compiler-plugin</artifactId>
++                <version>3.13.0</version>
++                <configuration>
++                    <source>25</source>
++                    <target>25</target>
++                    <compilerArgs>
++                        <arg>-h</arg>
++                        <arg>native</arg>
++                    </compilerArgs>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
+ 
+     <dependencies>
+         <dependency>
+Index: server/src/main/java/ru/skitel/cloud/service/collector/ByteArrayCollectorServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/service/collector/ByteArrayCollectorServiceImpl.java b/server/src/main/java/ru/skitel/cloud/service/collector/ByteArrayCollectorServiceImpl.java
+--- a/server/src/main/java/ru/skitel/cloud/service/collector/ByteArrayCollectorServiceImpl.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/service/collector/ByteArrayCollectorServiceImpl.java	(date 1786955730189)
+@@ -3,13 +3,13 @@
+ import ru.skitel.cloud.GlobalSettings;
+ import ru.skitel.cloud.ReceiverHolder;
+ import ru.skitel.cloud.api.ImageCollectorService;
+-import ru.skitel.cloud.api.ReceiverService;
++import ru.skitel.cloud.api.Receiver;
+ 
+ import java.nio.ByteBuffer;
+ 
+ public class ByteArrayCollectorServiceImpl implements ImageCollectorService<byte[]> {
+ 
+-    private final ReceiverService<byte[]> serverConnection;
++    private final Receiver<byte[]> serverConnection;
+ 
+     public ByteArrayCollectorServiceImpl() {
+         serverConnection = ReceiverHolder.INSTANCE.getInstance();
+Index: client/src/main/java/ru/skitel/cloud/facade/BufferedImageClientHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/client/src/main/java/ru/skitel/cloud/facade/BufferedImageClientHelper.java b/client/src/main/java/ru/skitel/cloud/facade/BufferedImageClientHelper.java
+--- a/client/src/main/java/ru/skitel/cloud/facade/BufferedImageClientHelper.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/client/src/main/java/ru/skitel/cloud/facade/BufferedImageClientHelper.java	(date 1787208881632)
+@@ -25,7 +25,6 @@
+ //        BenchmarkMethod.benchmarking(() -> sendSnapshot(screenshot));
+     }
+ 
+-
+     @Override
+     public void sendSnapshot(BufferedImage snapshot) throws IOException, InterruptedException {
+         byte[] picture = convert(snapshot);
+Index: server/src/main/java/ru/skitel/cloud/ServerApp.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/ServerApp.java b/server/src/main/java/ru/skitel/cloud/ServerApp.java
+--- a/server/src/main/java/ru/skitel/cloud/ServerApp.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/ServerApp.java	(date 1787207719079)
+@@ -4,9 +4,11 @@
+ import ru.skitel.cloud.setting.ServerModeSingleton;
+ import ru.skitel.cloud.utils.BenchmarkMethod;
+ 
++import java.io.IOException;
++
+ public class ServerApp implements Runnable {
+ 
+-    public static void main(String[] arg) {
++    public static void main(String[] arg) throws IOException, InterruptedException {
+         start();
+     }
+ 
+@@ -15,7 +17,7 @@
+ 
+     }
+ 
+-    private static void start() {
++    private static void start() throws IOException, InterruptedException {
+         ServerHelper<?> serverHelper = ServerModeSingleton.INSTANCE.getServerHelper();
+         while (true) {
+             BenchmarkMethod.benchmarking(serverHelper::receiveAndDraw);
+Index: test/src/test/java/ru/skitel/cloud/integrations/IntegrationHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/test/src/test/java/ru/skitel/cloud/integrations/IntegrationHelper.java b/test/src/test/java/ru/skitel/cloud/integrations/IntegrationHelper.java
+--- a/test/src/test/java/ru/skitel/cloud/integrations/IntegrationHelper.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/test/src/test/java/ru/skitel/cloud/integrations/IntegrationHelper.java	(date 1786955432857)
+@@ -1,12 +1,12 @@
+ package ru.skitel.cloud.integrations;
+ 
+-import ru.skitel.cloud.connection.SocketConnection;
+ import ru.skitel.cloud.facade.ClientHelper;
+ import ru.skitel.cloud.service.DatagramChunkedTransferService;
+ import ru.skitel.cloud.service.api.TransferService;
+ import ru.skitel.cloud.utils.ImageUtil;
+ 
+ import java.awt.image.BufferedImage;
++import java.io.IOException;
+ 
+ import static ru.skitel.cloud.converter.ImageConverter.convert;
+ 
+@@ -23,7 +23,11 @@
+     @Override
+     public void sendSnapshot(BufferedImage snapshot) {
+         byte[] picture = convert(snapshot);
+-        channel.transfer(picture);
++        try {
++            channel.transfer(picture);
++        } catch (IOException | InterruptedException e) {
++            throw new RuntimeException(e);
++        }
+     }
+ 
+ }
+\ No newline at end of file
+Index: client/pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/client/pom.xml b/client/pom.xml
+--- a/client/pom.xml	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/client/pom.xml	(date 1787274973689)
+@@ -11,7 +11,7 @@
+ 
+     <artifactId>client</artifactId>
+ 
+-    <name>cloudGaming</name>
++    <name>client</name>
+ 
+     <repositories>
+         <repository>
+@@ -20,6 +20,106 @@
+         </repository>
+     </repositories>
+ 
++    <build>
++        <resources>
++            <!-- Include native DLL in JAR -->
++            <resource>
++                <directory>build</directory>
++                <includes>
++                    <include>*.dll</include>
++                </includes>
++            </resource>
++            <!-- Standard resources -->
++            <resource>
++                <directory>src/main/resources</directory>
++            </resource>
++        </resources>
++        <plugins>
++            <plugin>
++                <groupId>org.apache.maven.plugins</groupId>
++                <artifactId>maven-jar-plugin</artifactId>
++                <version>3.3.0</version>
++                <configuration>
++                    <archive>
++                        <manifest>
++                            <addClasspath>true</addClasspath>
++                            <!-- Note: Library JAR - no mainClass needed -->
++                            <!-- Demos are in examples/ folder -->
++                        </manifest>
++                    </archive>
++                </configuration>
++            </plugin>
++
++            <plugin>
++            <groupId>org.apache.maven.plugins</groupId>
++            <artifactId>maven-resources-plugin</artifactId>
++            <version>3.3.1</version>
++            <executions>
++                <execution>
++                    <id>copy-native-libraries</id>
++                    <phase>process-resources</phase>
++                    <goals>
++                        <goal>copy-resources</goal>
++                    </goals>
++                    <configuration>
++                        <outputDirectory>${project.build.directory}/native/</outputDirectory>
++                        <resources>
++                            <resource>
++                                <directory>${project.basedir}/src/main/resources/</directory>
++                                <includes>
++                                    <include>*.dll</include>
++                                </includes>
++                            </resource>
++                        </resources>
++                    </configuration>
++                </execution>
++            </executions>
++            </plugin>
++            <plugin>
++                <!-- Source: https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin -->
++                <groupId>org.codehaus.mojo</groupId>
++                <artifactId>exec-maven-plugin</artifactId>
++                <version>3.6.3</version>
++                <goals>
++                    <goal>exec</goal>  <!-- ← Это цель плагина exec-maven-plugin -->
++                </goals>
++                <executions>
++                    <execution>
++                        <phase>generate-resources</phase>
++                    </execution>
++                </executions>
++                <configuration>
++                    <workingDirectory>${project.basedir}</workingDirectory>
++                    <executable>C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe</executable>
++                    <arguments>
++                        <argument>/I</argument>
++                        <argument>C:\Users\skite\.jdks\graalvm-jdk-25\include</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Users\skite\.jdks\graalvm-jdk-25\include\win32</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\cppwinrt</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\winrt</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared</argument>
++                        <argument>/I</argument>
++                        <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt</argument>
++                        <argument>/LD</argument>
++                        <argument>C:\Users\skite\IdeaProjects\cloudGaming\client\capture.cpp</argument>
++                        <argument>/Fe</argument>
++                        <argument>C:\Users\skite\IdeaProjects\cloudGaming\client\capturenew.dll</argument>
++                        <argument>/D_WIN64</argument>
++                        <argument>/DNOMINMAX</argument>
++                        <argument>/DWIN32_LEAN_AND_MEAN</argument>
++                    </arguments>
++                </configuration>
++            </plugin>
++        </plugins>
++    </build>
+     <dependencies>
+         <dependency>
+             <groupId>com.github.andrestubbe</groupId>
+@@ -52,5 +152,4 @@
+         </dependency>
+     </dependencies>
+ 
+-
+ </project>
+Index: client/src/main/java/ru/skitel/cloud/facade/BytesArrayClientHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/client/src/main/java/ru/skitel/cloud/facade/BytesArrayClientHelper.java b/client/src/main/java/ru/skitel/cloud/facade/BytesArrayClientHelper.java
+--- a/client/src/main/java/ru/skitel/cloud/facade/BytesArrayClientHelper.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/client/src/main/java/ru/skitel/cloud/facade/BytesArrayClientHelper.java	(date 1787209579874)
+@@ -1,18 +1,28 @@
+ package ru.skitel.cloud.facade;
+ 
+-import ru.skitel.cloud.service.ByteArrayScreenCaptureService;
++import ru.skitel.cloud.Drawer;
++import ru.skitel.cloud.service.*;
++import ru.skitel.cloud.service.api.TransferService;
++import ru.skitel.cloud.utils.BenchmarkMethod;
++import ru.skitel.cloud.utils.ImageEncoder;
+ 
++import java.awt.image.BufferedImage;
+ 
+ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
+ 
+-    ByteArrayScreenCaptureService byteArrayScreenCaptureService = new ByteArrayScreenCaptureService();
++    private final ScreenCaptureService<byte[]> screenCaptureService = new NativeScreenCaptureService();
++    private final TransferService<byte[]> datagramTransferService = new DatagramChunkedTransferService();
++    private final ImageEncoder convertOriginalImageAndScale = new ImageEncoder();
++
+ 
+     @Override
+-    public void getAndSendScreenshot() {
+-        while (true) {
+-            byte[] screenshot = byteArrayScreenCaptureService.getScreenImage();
+-            sendSnapshot(screenshot);
+-        }
++    public void getAndSendScreenshot() { // 40 ms
++        byte[] screenshot = BenchmarkMethod.benchmarking(screenCaptureService::getScreenImage); // 30 ms
++        BufferedImage convert = convertOriginalImageAndScale.encode(screenshot); // 100 ms -> 6 ms
++        Drawer.draw(convert);
++
++//        sendSnapshot(screenshot);
++
+     }
+ 
+     @Override
+Index: settings/src/main/java/ru/skitel/cloud/GlobalSettings.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/settings/src/main/java/ru/skitel/cloud/GlobalSettings.java b/settings/src/main/java/ru/skitel/cloud/GlobalSettings.java
+--- a/settings/src/main/java/ru/skitel/cloud/GlobalSettings.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/settings/src/main/java/ru/skitel/cloud/GlobalSettings.java	(date 1786986334095)
+@@ -9,7 +9,7 @@
+ 
+     private static final Resolution RESOLUTION = Resolution.RESOLUTION_2K;
+     private static final Mode SERVER_MODE = Mode.BUFFERED_IMAGE_MODE;
+-    private static final Mode CLIENT_MODE = Mode.INT_ARRAY_SCREEN_MODE;
++    private static final Mode CLIENT_MODE = Mode.BYTE_ARRAY_MODE;
+     private static final ConnectionType CONNECTION_TYPE = ConnectionType.LOCAL;
+     private static final PacketSettings PACKET_SETTINGS = new PacketSettings(65507);
+     private static final TypeMode TYPE_MODE = TypeMode.DATAGRAM_PACKET;
+Index: server/src/main/java/ru/skitel/cloud/service/collector/BufferedImageCollectorServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/service/collector/BufferedImageCollectorServiceImpl.java b/server/src/main/java/ru/skitel/cloud/service/collector/BufferedImageCollectorServiceImpl.java
+--- a/server/src/main/java/ru/skitel/cloud/service/collector/BufferedImageCollectorServiceImpl.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/service/collector/BufferedImageCollectorServiceImpl.java	(date 1786955730194)
+@@ -4,7 +4,7 @@
+ import ru.skitel.cloud.utils.ImageResizer;
+ import ru.skitel.cloud.ReceiverHolder;
+ import ru.skitel.cloud.api.ImageCollectorService;
+-import ru.skitel.cloud.api.ReceiverService;
++import ru.skitel.cloud.api.Receiver;
+ 
+ import java.awt.image.BufferedImage;
+ import java.nio.ByteBuffer;
+@@ -14,7 +14,7 @@
+ 
+ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<BufferedImage> {
+ 
+-    private final ReceiverService<byte[]> serverConnection;
++    private final Receiver<byte[]> serverConnection;
+     private final ImageResizer imageResizer = new ImageResizer();
+     private final AtomicInteger packetGot = new AtomicInteger(0);
+ 
+Index: test/src/test/java/ru/skitel/cloud/client/ClientHelperTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/test/src/test/java/ru/skitel/cloud/client/ClientHelperTest.java b/test/src/test/java/ru/skitel/cloud/client/ClientHelperTest.java
+--- a/test/src/test/java/ru/skitel/cloud/client/ClientHelperTest.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/test/src/test/java/ru/skitel/cloud/client/ClientHelperTest.java	(date 1786973054294)
+@@ -6,6 +6,7 @@
+ import ru.skitel.cloud.utils.ImageUtil;
+ 
+ import java.awt.image.BufferedImage;
++import java.io.IOException;
+ 
+ import static ru.skitel.cloud.converter.ImageConverter.convert;
+ 
+@@ -14,13 +15,13 @@
+     private static final TransferService<byte[]> channel = new DatagramChunkedTransferService();
+ 
+     @Override
+-    public void getAndSendScreenshot() {
++    public void getAndSendScreenshot() throws IOException, InterruptedException {
+         BufferedImage bufferedImage = ImageUtil.create3by3();
+         sendSnapshot(bufferedImage);
+     }
+ 
+     @Override
+-    public void sendSnapshot(BufferedImage snapshot) {
++    public void sendSnapshot(BufferedImage snapshot) throws IOException, InterruptedException {
+         byte[] picture = convert(snapshot);
+         channel.transfer(picture);
+     }
+Index: settings/src/main/java/ru/skitel/cloud/MonitorSettings.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/settings/src/main/java/ru/skitel/cloud/MonitorSettings.java b/settings/src/main/java/ru/skitel/cloud/MonitorSettings.java
+--- a/settings/src/main/java/ru/skitel/cloud/MonitorSettings.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/settings/src/main/java/ru/skitel/cloud/MonitorSettings.java	(date 1787122033191)
+@@ -10,7 +10,7 @@
+     public static final int DISPLAY_WIDTH = GRAPHICS_DEVICE.getDisplayMode().getWidth();
+     public static int imageResultWidth = DISPLAY_WIDTH / 2;
+     public static int imageResultHeight = DISPLAY_HEIGHT / 2;
+-    public static final BufferedImage resultScaledImage = new BufferedImage(imageResultWidth, imageResultHeight, BufferedImage.TYPE_INT_RGB);
++    public static final BufferedImage resultScaledImage = new BufferedImage(imageResultWidth, imageResultHeight, BufferedImage.TYPE_INT_ARGB);
+     public static final Graphics2D IMAGE_GRAPHICS = resultScaledImage.createGraphics();
+ 
+ 
+Index: client/src/main/java/ru/skitel/cloud/facade/ClientHelper.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/client/src/main/java/ru/skitel/cloud/facade/ClientHelper.java b/client/src/main/java/ru/skitel/cloud/facade/ClientHelper.java
+--- a/client/src/main/java/ru/skitel/cloud/facade/ClientHelper.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/client/src/main/java/ru/skitel/cloud/facade/ClientHelper.java	(date 1786973054288)
+@@ -4,7 +4,7 @@
+ 
+ public abstract class ClientHelper<T>  {
+ 
+-    public abstract void getAndSendScreenshot();
++    public abstract void getAndSendScreenshot() throws IOException, InterruptedException;
+     public abstract void sendSnapshot(T snapshot) throws IOException, InterruptedException;
+ 
+ }
+Index: server/src/main/java/ru/skitel/cloud/ReceiverTypes.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/ReceiverTypes.java b/server/src/main/java/ru/skitel/cloud/ReceiverTypes.java
+--- a/server/src/main/java/ru/skitel/cloud/ReceiverTypes.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/ReceiverTypes.java	(date 1786955730199)
+@@ -1,7 +1,7 @@
+ package ru.skitel.cloud;
+ 
+-import ru.skitel.cloud.api.ReceiverService;
++import ru.skitel.cloud.api.Receiver;
+ 
+ public interface ReceiverTypes {
+-    <T> ReceiverService<T> getReceiver();
++    <T> Receiver<T> getReceiver();
+ }
+Index: server/src/main/java/ru/skitel/cloud/api/ReceiverService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/server/src/main/java/ru/skitel/cloud/api/ReceiverService.java b/server/src/main/java/ru/skitel/cloud/api/Receiver.java
+rename from server/src/main/java/ru/skitel/cloud/api/ReceiverService.java
+rename to server/src/main/java/ru/skitel/cloud/api/Receiver.java
+--- a/server/src/main/java/ru/skitel/cloud/api/ReceiverService.java	(revision f7b09b8814bc5fb50fc3fa0df464f3e229261a9b)
++++ b/server/src/main/java/ru/skitel/cloud/api/Receiver.java	(date 1786955730230)
+@@ -1,5 +1,5 @@
+ package ru.skitel.cloud.api;
+ 
+-public interface ReceiverService<T> {
++public interface Receiver<T> {
+     T getPack();
+ }

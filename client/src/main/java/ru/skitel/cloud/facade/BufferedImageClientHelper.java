@@ -25,7 +25,6 @@ public class BufferedImageClientHelper extends ClientHelper<BufferedImage> {
 //        BenchmarkMethod.benchmarking(() -> sendSnapshot(screenshot));
     }
 
-
     @Override
     public void sendSnapshot(BufferedImage snapshot) throws IOException, InterruptedException {
         byte[] picture = convert(snapshot);

@@ -3,13 +3,34 @@ package ru.skitel.cloud;
 import ru.skitel.cloud.facade.ClientHelper;
 import ru.skitel.cloud.factory.ClientHelperFactory;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+
 public class ClientApp implements Runnable {
 
-    public static void main(String[] args){
+    private static void loadFromResources() throws Exception {
+        String dllName = "capture.dll";
+
+        Path path = Paths.get( "native", dllName);
+        Path absolutePath = path.toAbsolutePath();
+
+        if (!Files.exists(absolutePath)) {
+            throw new RuntimeException("Нативная библиотека не найдена по пути: " + absolutePath);
+        }
+
+        System.load(absolutePath.toString());
+    }
+
+    public static void main(String[] args) throws Exception {
+        loadFromResources();
         start();
     }
 
-    public static void start() {
+
+    public static void start() throws IOException, InterruptedException {
         ClientHelper<?> clientHelper = ClientHelperFactory.getClientHelper();
         int i = 0;
         while (true) {
@@ -20,7 +41,13 @@ public class ClientApp implements Runnable {
 
     @Override
     public void run() {
-        start();
+        try {
+            start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public class Drawer {
 
     static {
         frame.setLayout(new BorderLayout());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
         frame.pack();

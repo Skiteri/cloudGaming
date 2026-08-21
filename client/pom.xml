@@ -11,7 +11,7 @@
 
     <artifactId>client</artifactId>
 
-    <name>cloudGaming</name>
+    <name>client</name>
 
     <repositories>
         <repository>
@@ -20,6 +20,29 @@
         </repository>
     </repositories>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- Note: Library JAR - no mainClass needed -->
+                            <!-- Demos are in examples/ folder -->
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>com.github.andrestubbe</groupId>
@@ -52,5 +75,66 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>compile-dll</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.6.3</version>
 
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+
+                        <configuration>
+                            <executable>C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostx64\x64\cl.exe</executable>
+                            <workingDirectory>target/native</workingDirectory>
+                            <arguments>
+                                <argument>/I</argument>
+                                <argument>${env.JAVA_HOME}\include</argument>
+                                <argument>/I</argument>
+                                <argument>${env.JAVA_HOME}\include\win32</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\um</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\include</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\cppwinrt</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\winrt</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\shared</argument>
+                                <argument>/I</argument>
+                                <argument>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0\ucrt</argument>
+                                <argument>/LD</argument>
+                                <argument>C:\Users\skite\IdeaProjects\cloudGaming\native\capture.cpp</argument>
+                                <argument>/Fe${project.basedir}\target\native\capture.dll</argument>
+                                <argument>/D_WIN64</argument>
+                                <argument>/DNOMINMAX</argument>
+                                <argument>/DWIN32_LEAN_AND_MEAN</argument>
+                                <argument>/link</argument>
+
+                                <!-- Путь к библиотекам самого компилятора MSVC (kernel32.lib и др.) -->
+                                <argument>/LIBPATH:C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\lib\x64</argument>
+
+                                <!-- Путь к стандартной библиотеке C (ucrt.lib) -->
+                                <argument>/LIBPATH:C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\ucrt\x64</argument>
+
+                                <!-- Путь к системным библиотекам Windows (uuid.lib, user32.lib и др.) -->
+                                <argument>/LIBPATH:C:\Program Files (x86)\Windows Kits\10\Lib\10.0.26100.0\um\x64</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

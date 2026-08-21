@@ -10,7 +10,7 @@ public class MonitorSettings {
     public static final int DISPLAY_WIDTH = GRAPHICS_DEVICE.getDisplayMode().getWidth();
     public static int imageResultWidth = DISPLAY_WIDTH / 2;
     public static int imageResultHeight = DISPLAY_HEIGHT / 2;
-    public static final BufferedImage resultScaledImage = new BufferedImage(imageResultWidth, imageResultHeight, BufferedImage.TYPE_INT_RGB);
+    public static final BufferedImage resultScaledImage = new BufferedImage(imageResultWidth, imageResultHeight, BufferedImage.TYPE_INT_ARGB);
     public static final Graphics2D IMAGE_GRAPHICS = resultScaledImage.createGraphics();
 
 

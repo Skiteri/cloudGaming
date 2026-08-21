@@ -7,10 +7,10 @@ public class BenchmarkMethod {
 
     @FunctionalInterface
     public interface Action {
-        void action(); // Название метода может быть любым
+        void action() throws IOException, InterruptedException; // Название метода может быть любым
     }
 
-    public static void benchmarking(Action action) {
+    public static void benchmarking(Action action) throws IOException, InterruptedException {
         long l = System.currentTimeMillis();
         action.action();
         System.out.println("Cистема выполнила действие за " + (System.currentTimeMillis() - l));

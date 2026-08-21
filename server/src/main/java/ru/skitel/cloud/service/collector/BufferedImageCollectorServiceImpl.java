@@ -4,7 +4,7 @@ import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.utils.ImageResizer;
 import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
-import ru.skitel.cloud.api.ReceiverService;
+import ru.skitel.cloud.api.Receiver;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
@@ -14,7 +14,7 @@ import static ru.skitel.cloud.converter.ImageConverter.convert;
 
 public class BufferedImageCollectorServiceImpl implements ImageCollectorService<BufferedImage> {
 
-    private final ReceiverService<byte[]> serverConnection;
+    private final Receiver<byte[]> serverConnection;
     private final ImageResizer imageResizer = new ImageResizer();
     private final AtomicInteger packetGot = new AtomicInteger(0);
 

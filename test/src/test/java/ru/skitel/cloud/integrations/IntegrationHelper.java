@@ -1,12 +1,12 @@
 package ru.skitel.cloud.integrations;
 
-import ru.skitel.cloud.connection.SocketConnection;
 import ru.skitel.cloud.facade.ClientHelper;
 import ru.skitel.cloud.service.DatagramChunkedTransferService;
 import ru.skitel.cloud.service.api.TransferService;
 import ru.skitel.cloud.utils.ImageUtil;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import static ru.skitel.cloud.converter.ImageConverter.convert;
 
@@ -23,7 +23,11 @@ public class IntegrationHelper extends ClientHelper<BufferedImage> {
     @Override
     public void sendSnapshot(BufferedImage snapshot) {
         byte[] picture = convert(snapshot);
-        channel.transfer(picture);
+        try {
+            channel.transfer(picture);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
