@@ -1,33 +1,27 @@
 package ru.skitel.cloud.facade;
 
-import ru.skitel.cloud.Drawer;
 import ru.skitel.cloud.service.*;
 import ru.skitel.cloud.service.api.TransferService;
-import ru.skitel.cloud.utils.BenchmarkMethod;
-import ru.skitel.cloud.utils.ImageEncoder;
 
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
     private final ScreenCaptureService<byte[]> screenCaptureService = new NativeScreenCaptureService();
     private final TransferService<byte[]> datagramTransferService = new DatagramChunkedTransferService();
-    private final ImageEncoder convertOriginalImageAndScale = new ImageEncoder();
 
 
     @Override
-    public void getAndSendScreenshot() { // 40 ms
-        byte[] screenshot = BenchmarkMethod.benchmarking(screenCaptureService::getScreenImage); // 30 ms
-        BufferedImage convert = convertOriginalImageAndScale.encode(screenshot); // 100 ms -> 6 ms
-        Drawer.draw(convert);
-
-//        sendSnapshot(screenshot);
-
+    public void getAndSendScreenshot() throws IOException, InterruptedException { // 40 ms
+        byte[] screenshot = screenCaptureService.getScreenImage(); // 30 ms
+        sendSnapshot(screenshot);
     }
 
     @Override
-    public void sendSnapshot(byte[] snapshot) {
-//        getChannel().transfer(snapshot);
+    public void sendSnapshot(byte[] snapshot) throws IOException, InterruptedException {
+         datagramTransferService.transfer(snapshot);
+//        BenchmarkMethod.benchmarking(() -> datagramTransferService.transfer(snapshot));
+
     }
 
 }

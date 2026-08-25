@@ -24,7 +24,6 @@ public class ByteArrayCollectorServiceImpl implements ImageCollectorService<byte
 
         for (int i = 0; i <= iterations; i++) {
             byte[] data = serverConnection.getPack();
-            System.out.println(i);
             int length = data.length * (i + 1) > result.length ? result.length - i * data.length : data.length;
             System.arraycopy(data, 0, result, i * data.length, length);
         }

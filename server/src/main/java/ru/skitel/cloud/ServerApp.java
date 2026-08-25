@@ -8,8 +8,12 @@ import java.io.IOException;
 
 public class ServerApp implements Runnable {
 
-    public static void main(String[] arg) throws IOException, InterruptedException {
-        start();
+    public static void main(String[] arg) {
+        try  {
+            start();
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -19,8 +23,11 @@ public class ServerApp implements Runnable {
 
     private static void start() throws IOException, InterruptedException {
         ServerHelper<?> serverHelper = ServerModeSingleton.INSTANCE.getServerHelper();
-        while (true) {
-            BenchmarkMethod.benchmarking(serverHelper::receiveAndDraw);
+        int i = 0;
+        while (i < 5) {
+            BenchmarkMethod.benchmarking(serverHelper::receiveAndDraw) ;
+//            serverHelper.receiveAndDraw();
+            i++;
         }
     }
 }

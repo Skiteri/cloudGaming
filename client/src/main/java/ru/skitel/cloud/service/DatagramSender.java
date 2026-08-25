@@ -24,7 +24,6 @@ public class DatagramSender extends ConnectionStarter implements PackageSender<D
     @Override
     public void send(DatagramPacket datagramPacket) throws IOException {
         datagramSocket.send(datagramPacket);
-        System.out.println(packetSent.incrementAndGet());
     }
 
     public void sendWithTimeout(DatagramPacket datagramPacket) throws InterruptedException, IOException {

@@ -35,6 +35,7 @@ public class BufferedImageCollectorServiceImpl implements ImageCollectorService<
             System.arraycopy(data, 0, result, i * data.length, length);
         }
         System.out.println(packetGot.get());
+
         return imageResizer.resize(convert(result));
     }
 

@@ -2,6 +2,7 @@ package ru.skitel.cloud;
 
 import ru.skitel.cloud.facade.ClientHelper;
 import ru.skitel.cloud.factory.ClientHelperFactory;
+import ru.skitel.cloud.utils.BenchmarkMethod;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -11,7 +12,7 @@ import java.nio.file.Paths;
 
 public class ClientApp implements Runnable {
 
-    private static void loadFromResources() throws Exception {
+    private static void loadFromResources() {
         String dllName = "capture.dll";
 
         Path path = Paths.get( "native", dllName);
@@ -34,8 +35,8 @@ public class ClientApp implements Runnable {
         ClientHelper<?> clientHelper = ClientHelperFactory.getClientHelper();
         int i = 0;
         while (true) {
-//            BenchmarkMethod.benchmarking(clientHelper::getAndSendScreenshot);
-            clientHelper.getAndSendScreenshot();
+            BenchmarkMethod.benchmarking(clientHelper::getAndSendScreenshot);
+//            clientHelper.getAndSendScreenshot();
         }
     }
 
@@ -43,9 +44,7 @@ public class ClientApp implements Runnable {
     public void run() {
         try {
             start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
