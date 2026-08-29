@@ -24,9 +24,10 @@ public class ServerApp implements Runnable {
     private static void start() throws IOException, InterruptedException {
         ServerHelper<?> serverHelper = ServerModeSingleton.INSTANCE.getServerHelper();
         int i = 0;
-        while (i < 5) {
-            BenchmarkMethod.benchmarking(serverHelper::receiveAndDraw) ;
-//            serverHelper.receiveAndDraw();
+        while (true) {
+//        while (i < 5) {
+//            BenchmarkMethod.benchmarking(serverHelper::receiveAndDraw) ;
+            serverHelper.receiveAndDraw();
             i++;
         }
     }

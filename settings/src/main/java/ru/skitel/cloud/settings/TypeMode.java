@@ -5,5 +5,4 @@ public enum TypeMode {
     DATAGRAM_PACKET,
     SOCKET,
     SOCKET_CHANNEL
-
 }

@@ -1,5 +1,6 @@
 package ru.skitel.cloud.service.collector;
 
+import ru.skitel.cloud.Drawer;
 import ru.skitel.cloud.GlobalSettings;
 import ru.skitel.cloud.ReceiverHolder;
 import ru.skitel.cloud.api.ImageCollectorService;
@@ -18,6 +19,10 @@ public class ByteArrayCollectorServiceImpl implements ImageCollectorService<byte
     @Override
     public byte[] collect() {
         int dataLength = ByteBuffer.wrap(serverConnection.getPack()).getInt();
+        if (dataLength < 0 || dataLength > 33177600) {
+            Drawer.getImagesNotDrew().getAndIncrement();
+            return null;
+        }
         int packetLength = GlobalSettings.getPacketSettings().getPacketLength();
         int iterations = (int) Math.ceil((double) dataLength / packetLength) - 1;
         byte[] result = new byte[dataLength];
@@ -27,6 +32,7 @@ public class ByteArrayCollectorServiceImpl implements ImageCollectorService<byte
             int length = data.length * (i + 1) > result.length ? result.length - i * data.length : data.length;
             System.arraycopy(data, 0, result, i * data.length, length);
         }
+        System.out.println(iterations + " " + dataLength );
         return result;
     }
 }

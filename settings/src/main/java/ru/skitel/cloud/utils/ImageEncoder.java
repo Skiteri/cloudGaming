@@ -14,6 +14,7 @@ public class ImageEncoder {
     }
 
     public BufferedImage encode(byte[] screenshot) {
+        if (screenshot == null) return null;
         return interpolate4bytePixel(screenshot, 2);
     }
 

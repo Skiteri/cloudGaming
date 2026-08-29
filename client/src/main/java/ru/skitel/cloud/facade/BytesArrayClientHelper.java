@@ -2,6 +2,7 @@ package ru.skitel.cloud.facade;
 
 import ru.skitel.cloud.service.*;
 import ru.skitel.cloud.service.api.TransferService;
+import ru.skitel.cloud.utils.BenchmarkMethod;
 
 import java.io.IOException;
 
@@ -19,9 +20,8 @@ public class BytesArrayClientHelper extends ClientHelper<byte[]> {
 
     @Override
     public void sendSnapshot(byte[] snapshot) throws IOException, InterruptedException {
-         datagramTransferService.transfer(snapshot);
-//        BenchmarkMethod.benchmarking(() -> datagramTransferService.transfer(snapshot));
-
+//         datagramTransferService.transfer(snapshot);
+        datagramTransferService.transfer(snapshot);
     }
 
 }

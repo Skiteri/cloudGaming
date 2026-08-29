@@ -9,13 +9,11 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DatagramSender extends ConnectionStarter implements PackageSender<DatagramPacket> {
 
     @Getter
     private DatagramSocket datagramSocket;
-    private final AtomicInteger packetSent = new AtomicInteger(0);
 
     public DatagramSender() {
         start();

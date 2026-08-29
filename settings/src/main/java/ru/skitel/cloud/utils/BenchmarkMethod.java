@@ -13,7 +13,8 @@ public class BenchmarkMethod {
     public static void benchmarking(Action action) throws IOException, InterruptedException {
         long l = System.currentTimeMillis();
         action.action();
-        System.out.println("Cистема выполнила действие за " + (System.currentTimeMillis() - l));
+        long l1 = System.currentTimeMillis() - l;
+        System.out.println("Cистема выполнила действие за " + l1);
     }
 
     public static <T> T benchmarking(Supplier<T> action) {
